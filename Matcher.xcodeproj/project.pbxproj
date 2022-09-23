@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0CABEC8E28DE31E900B9D25E /* MathBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CABEC8D28DE31E900B9D25E /* MathBox.swift */; };
 		0CF21B9228DE305B007D57EE /* Matcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CF21B9128DE305B007D57EE /* Matcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CF21B9F28DE30FE007D57EE /* ModKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF21B9D28DE30EA007D57EE /* ModKit.framework */; };
 /* End PBXBuildFile section */
@@ -22,6 +23,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0CABEC8D28DE31E900B9D25E /* MathBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathBox.swift; sourceTree = "<group>"; };
 		0CF21B8E28DE305B007D57EE /* Matcher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Matcher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CF21B9128DE305B007D57EE /* Matcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matcher.h; sourceTree = "<group>"; };
 		0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ModKit.xcodeproj; path = ../ModKit/ModKit.xcodeproj; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				0CF21B9128DE305B007D57EE /* Matcher.h */,
+				0CABEC8D28DE31E900B9D25E /* MathBox.swift */,
 			);
 			path = Matcher;
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CABEC8E28DE31E900B9D25E /* MathBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
