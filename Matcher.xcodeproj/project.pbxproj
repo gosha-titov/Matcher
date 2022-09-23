@@ -8,11 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		0CF21B9228DE305B007D57EE /* Matcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CF21B9128DE305B007D57EE /* Matcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0CF21B9F28DE30FE007D57EE /* ModKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF21B9D28DE30EA007D57EE /* ModKit.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0CF21B9C28DE30EA007D57EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0CBA44FC28D4FE92006F6DAF;
+			remoteInfo = ModKit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0CF21B8E28DE305B007D57EE /* Matcher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Matcher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CF21B9128DE305B007D57EE /* Matcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matcher.h; sourceTree = "<group>"; };
+		0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ModKit.xcodeproj; path = ../ModKit/ModKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -20,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CF21B9F28DE30FE007D57EE /* ModKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -29,8 +42,10 @@
 		0CF21B8428DE305B007D57EE = {
 			isa = PBXGroup;
 			children = (
+				0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */,
 				0CF21B9028DE305B007D57EE /* Matcher */,
 				0CF21B8F28DE305B007D57EE /* Products */,
+				0CF21B9E28DE30FE007D57EE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -48,6 +63,21 @@
 				0CF21B9128DE305B007D57EE /* Matcher.h */,
 			);
 			path = Matcher;
+			sourceTree = "<group>";
+		};
+		0CF21B9928DE30EA007D57EE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0CF21B9D28DE30EA007D57EE /* ModKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0CF21B9E28DE30FE007D57EE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -93,6 +123,7 @@
 				TargetAttributes = {
 					0CF21B8D28DE305B007D57EE = {
 						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -107,12 +138,28 @@
 			mainGroup = 0CF21B8428DE305B007D57EE;
 			productRefGroup = 0CF21B8F28DE305B007D57EE /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0CF21B9928DE30EA007D57EE /* Products */;
+					ProjectRef = 0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				0CF21B8D28DE305B007D57EE /* Matcher */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0CF21B9D28DE30EA007D57EE /* ModKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ModKit.framework;
+			remoteRef = 0CF21B9C28DE30EA007D57EE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0CF21B8C28DE305B007D57EE /* Resources */ = {
@@ -258,6 +305,7 @@
 		0CF21B9628DE305B007D57EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -277,6 +325,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -285,6 +334,7 @@
 		0CF21B9728DE305B007D57EE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
