@@ -8,11 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		0CABEC8E28DE31E900B9D25E /* MathBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CABEC8D28DE31E900B9D25E /* MathBox.swift */; };
+		0CABEC9628DE69D900B9D25E /* MatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CABEC9528DE69D900B9D25E /* MatcherTests.swift */; };
+		0CABEC9728DE69D900B9D25E /* Matcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF21B8E28DE305B007D57EE /* Matcher.framework */; };
 		0CF21B9228DE305B007D57EE /* Matcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CF21B9128DE305B007D57EE /* Matcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CF21B9F28DE30FE007D57EE /* ModKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF21B9D28DE30EA007D57EE /* ModKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0CABEC9828DE69D900B9D25E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0CF21B8528DE305B007D57EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0CF21B8D28DE305B007D57EE;
+			remoteInfo = Matcher;
+		};
 		0CF21B9C28DE30EA007D57EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */;
@@ -24,12 +33,22 @@
 
 /* Begin PBXFileReference section */
 		0CABEC8D28DE31E900B9D25E /* MathBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathBox.swift; sourceTree = "<group>"; };
+		0CABEC9328DE69D900B9D25E /* MatcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CABEC9528DE69D900B9D25E /* MatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatcherTests.swift; sourceTree = "<group>"; };
 		0CF21B8E28DE305B007D57EE /* Matcher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Matcher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CF21B9128DE305B007D57EE /* Matcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matcher.h; sourceTree = "<group>"; };
 		0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ModKit.xcodeproj; path = ../ModKit/ModKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0CABEC9028DE69D900B9D25E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0CABEC9728DE69D900B9D25E /* Matcher.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CF21B8B28DE305B007D57EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -41,11 +60,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0CABEC9428DE69D900B9D25E /* MatcherTests */ = {
+			isa = PBXGroup;
+			children = (
+				0CABEC9528DE69D900B9D25E /* MatcherTests.swift */,
+			);
+			path = MatcherTests;
+			sourceTree = "<group>";
+		};
 		0CF21B8428DE305B007D57EE = {
 			isa = PBXGroup;
 			children = (
 				0CF21B9828DE30EA007D57EE /* ModKit.xcodeproj */,
 				0CF21B9028DE305B007D57EE /* Matcher */,
+				0CABEC9428DE69D900B9D25E /* MatcherTests */,
 				0CF21B8F28DE305B007D57EE /* Products */,
 				0CF21B9E28DE30FE007D57EE /* Frameworks */,
 			);
@@ -55,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				0CF21B8E28DE305B007D57EE /* Matcher.framework */,
+				0CABEC9328DE69D900B9D25E /* MatcherTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,6 +126,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0CABEC9228DE69D900B9D25E /* MatcherTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CABEC9A28DE69D900B9D25E /* Build configuration list for PBXNativeTarget "MatcherTests" */;
+			buildPhases = (
+				0CABEC8F28DE69D900B9D25E /* Sources */,
+				0CABEC9028DE69D900B9D25E /* Frameworks */,
+				0CABEC9128DE69D900B9D25E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0CABEC9928DE69D900B9D25E /* PBXTargetDependency */,
+			);
+			name = MatcherTests;
+			productName = MatcherTests;
+			productReference = 0CABEC9328DE69D900B9D25E /* MatcherTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		0CF21B8D28DE305B007D57EE /* Matcher */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0CF21B9528DE305B007D57EE /* Build configuration list for PBXNativeTarget "Matcher" */;
@@ -122,8 +169,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					0CABEC9228DE69D900B9D25E = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 					0CF21B8D28DE305B007D57EE = {
 						CreatedOnToolsVersion = 13.4.1;
 						LastSwiftMigration = 1340;
@@ -150,6 +201,7 @@
 			projectRoot = "";
 			targets = (
 				0CF21B8D28DE305B007D57EE /* Matcher */,
+				0CABEC9228DE69D900B9D25E /* MatcherTests */,
 			);
 		};
 /* End PBXProject section */
@@ -165,6 +217,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0CABEC9128DE69D900B9D25E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CF21B8C28DE305B007D57EE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -175,6 +234,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0CABEC8F28DE69D900B9D25E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0CABEC9628DE69D900B9D25E /* MatcherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0CF21B8A28DE305B007D57EE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -185,7 +252,45 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		0CABEC9928DE69D900B9D25E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0CF21B8D28DE305B007D57EE /* Matcher */;
+			targetProxy = 0CABEC9828DE69D900B9D25E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0CABEC9B28DE69D900B9D25E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gosha-titov.MatcherTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0CABEC9C28DE69D900B9D25E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gosha-titov.MatcherTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		0CF21B9328DE305B007D57EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -366,6 +471,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0CABEC9A28DE69D900B9D25E /* Build configuration list for PBXNativeTarget "MatcherTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0CABEC9B28DE69D900B9D25E /* Debug */,
+				0CABEC9C28DE69D900B9D25E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		0CF21B8828DE305B007D57EE /* Build configuration list for PBXProject "Matcher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
