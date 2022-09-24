@@ -58,7 +58,6 @@ final class MathBox {
         for element in sequence[1...] {
             
             var lowerBound = 0, upperBound = lises.count - 1
-            var elementIsNotFound = true
             
             // The point of this algorithm is that we do know that `lises` are ordered by the last element.
             // Shift the boundaries to the first element that is bigger than the current one.
@@ -66,14 +65,10 @@ final class MathBox {
             while lowerBound < upperBound {
                 let middle = lowerBound + (upperBound - lowerBound) / 2
                 let middleElement = lises[middle].last!
-                
-                // If we find an equal element, then we already know for sure that no changes can be made.
-                guard middleElement != element else { elementIsNotFound = false; break }
-                
-                if middleElement > element { upperBound = middle }
+                if middleElement == element { lowerBound = middle; break }
+                if middleElement > element  { upperBound = middle }
                 else { lowerBound = middle + 1 }
             }
-            guard elementIsNotFound else { continue }
             
             let index = lowerBound
             
