@@ -7,6 +7,66 @@ typealias Sequence = [Int]
 
 final class MathBox {
     
+    // MARK: Generate Raw Sequences
+
+    /// Generates all possible char placements for `comparedText` relying on `exemplaryText`.
+    ///
+    /// This method searchs for the placements of the same char in `exemplaryText` for each char in `comparedText`.
+    ///
+    /// The raw sequences are arranged in increasing order.
+    /// The indexes of the same chars are arranged in non-decreasing order.
+    ///
+    ///     let comparedText = "gotob"
+    ///     let exemplaryText = "robot"
+    ///     let rawSequences = generateRawSequences(
+    ///         for: comparedText,
+    ///         relyingOn: exemplaryText
+    ///     )
+    ///     /* [[nil, 1, 4, 1, 2],
+    ///         [nil, 1, 4, 3, 2],
+    ///         [nil, 3, 4, 3, 2]] */
+    ///
+    /// - Returns: Sequences where elemens are indexes of chars in `sourceStr`.
+    ///
+    static func generateRawSequences(for comparedText: String, relyingOn exemplaryText: String) -> [OptionalSequence] {
+        
+        let comparedText = comparedText.lowercased()
+        var rawSequences = [OptionalSequence]()
+        var cache = [Character: [Int]]()
+        let dict = extractCharPositions(from: exemplaryText)
+        
+        func recursion(_ sequence: OptionalSequence, _ index: Int) -> Void {
+            guard index < comparedText.count else {
+                rawSequences.append(sequence)
+                return
+            }
+            let char = comparedText[index]
+            if let elements = dict[char] {
+                for element in elements {
+                    if let array = cache[char], let last = array.last {
+                        guard element >= last else { continue }
+                        cache[char]!.append(element)
+                    } else {
+                        cache[char] = [element]
+                    }
+                    var newSequence = sequence
+                    newSequence.append(element)
+                    recursion(newSequence, index + 1)
+                    cache[char]!.removeLast()
+                }
+            } else {
+                var newSequence = sequence
+                newSequence.append(nil)
+                recursion(newSequence, index + 1)
+            }
+        }
+        
+        recursion([], 0)
+        
+        return rawSequences
+    }
+
+    
     // MARK: Extract Char Positions
     
     /// Decomposes the given text into chars and indexes where they are placed.
@@ -16,7 +76,6 @@ final class MathBox {
     ///     // ["r": [0], "o": [1, 3], "b": [2], "t": [4]]
     ///
     /// Letter case does not affect the result.
-    ///
     /// - Returns: A dictionary where each char keeps its own indexes.
     ///
     static func extractCharPositions(from text: String) -> [Character: [Int]] {
