@@ -3,6 +3,46 @@ import XCTest
 
 class MathBoxTests: XCTestCase {
     
+    // MARK: Make Raw Pairs
+    
+    func testMakeRawPairs() -> Void {
+        
+        var rawSequences = [OptionalSequence]()
+        var rawPairs: [Pair] {
+            MathBox.makeRawPairs(for: rawSequences).map { Pair($0) }
+        }
+        
+        XCTAssertEqual(rawPairs, [])
+        
+        rawSequences = [ [0, 1, 2] ]
+        XCTAssertEqual(rawPairs, [
+            Pair(sequence: rawSequences[0], subsequence: [0, 1, 2])
+        ])
+        
+        rawSequences = [ [0, 2, 1], [0, 2, 3] ]
+        XCTAssertEqual(rawPairs, [
+            Pair(sequence: rawSequences[1], subsequence: [0, 2, 3])
+        ])
+        
+        rawSequences = [ [nil] ]
+        XCTAssertEqual(rawPairs, [
+            Pair(sequence: rawSequences[0], subsequence: [])
+        ])
+        
+        rawSequences = [ [1, nil, 2], [1, nil, 3] ]
+        XCTAssertEqual(rawPairs, [
+            Pair(sequence: rawSequences[0], subsequence: [1, 2]),
+            Pair(sequence: rawSequences[1], subsequence: [1, 3])
+        ])
+        
+        rawSequences = [ [nil, 2, 0, 4, nil], [nil, 2, 3, 4, nil] ]
+        XCTAssertEqual(rawPairs, [
+            Pair(sequence: rawSequences[1], subsequence: [2, 3, 4])
+        ])
+        
+    }
+    
+    
     // MARK: Generate Raw Sequences
     
     func testGenerateRawSequences() -> Void {
@@ -87,5 +127,25 @@ class MathBoxTests: XCTestCase {
         XCTAssertEqual(subsequence, [0, 1, 3])
         
     }
-
+    
+    
+    // MARK: Helpers
+    
+    private struct Pair: Equatable {
+        let sequence: OptionalSequence
+        let subsequence: Subsequence
+        init(sequence: OptionalSequence, subsequence: Subsequence) {
+            self.sequence = sequence; self.subsequence = subsequence
+        }
+        init(_ pair: (OptionalSequence, Subsequence)) {
+            sequence = pair.0; subsequence = pair.1
+        }
+        init() { sequence = []; subsequence = [] }
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            if lhs.sequence == rhs.sequence, lhs.subsequence == rhs.subsequence {
+                return true
+            } else { return false }
+        }
+    }
+    
 }
