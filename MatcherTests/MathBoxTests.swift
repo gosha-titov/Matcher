@@ -3,10 +3,33 @@ import XCTest
 
 class MathBoxTests: XCTestCase {
 
+    // MARK: Extract Char Positions
+    
+    func testExtractCharPositions() -> Void {
+        
+        var text = String()
+        var dict: [Character: [Int]] {
+            MathBox.extractCharPositions(from: text)
+        }
+        
+        XCTAssertEqual(dict, [:])
+        
+        text = "abc"
+        XCTAssertEqual(dict, ["a": [0], "b": [1], "c": [2]])
+        
+        text = "AbcaBC"
+        XCTAssertEqual(dict, ["a": [0, 3], "b": [1, 4], "c": [2, 5]])
+        
+        text = "1!,@1"
+        XCTAssertEqual(dict, ["1": [0, 4], "!": [1], ",": [2], "@": [3]])
+        
+    }
+    
     
     // MARK: Find Lis
     
     func testFindLis() -> Void {
+        
         var sequence = Sequence()
         var subsequence: Subsequence { MathBox.findLis(in: sequence) }
         
