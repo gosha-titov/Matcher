@@ -7,7 +7,32 @@ typealias Sequence = [Int]
 
 final class MathBox {
     
-    // MARK: Methods
+    // MARK: Extract Char Positions
+    
+    /// Decomposes the given text into chars and indexes where they are placed.
+    ///
+    ///     let text = "Robot"
+    ///     let dict = extractCharPositions(from: text)
+    ///     // ["r": [0], "o": [1, 3], "b": [2], "t": [4]]
+    ///
+    /// Letter case does not affect the result.
+    ///
+    /// - Returns: A dictionary where each char keeps its own indexes.
+    ///
+    static func extractCharPositions(from text: String) -> [Character: [Int]] {
+        var dict = [Character: [Int]]()
+        for (index, char) in text.lowercased().enumerated() {
+            if dict.hasKey(char) {
+                dict[char]!.append(index)
+            } else {
+                dict[char] = [index]
+            }
+        }
+        return dict
+    }
+    
+    
+    // MARK: Find Lis
     
     /// Finds the longest increasing subsequence in the given sequence.
     ///
