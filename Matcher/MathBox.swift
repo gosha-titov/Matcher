@@ -4,12 +4,16 @@ typealias OptionalSequence = [Int?]
 typealias Subsequence = [Int]
 typealias Sequence = [Int]
 
-
+/// A type that consists of method for working with numbers, sequences and so on.
+/// `MathBox` prepares the basis for the formation of `TypifiedText`.
 final class MathBox {
     
     // MARK: Pick Best Pair
     
     /// Picks the best pair among the given pairs.
+    ///
+    /// It is important that the subsequences are only of one length, otherwise this method will not work correctly.
+    /// The picking is made by the smallest sum of the subsequence.
     ///
     ///     let rawPairs = [
     ///         ([nil, 1, 2, 4, 1], [1, 2, 4]),
@@ -17,8 +21,6 @@ final class MathBox {
     ///     ]
     ///     let bestPair = pickBestPair(among: rawPairs)
     ///     // ([nil, 1, 2, 4, 3], [1, 2, 3])
-    ///
-    /// - Note: The picking is made by the smallest lis sum.
     ///
     static func pickBestPair(among rawPairs: [(OptionalSequence, Subsequence)]) -> (OptionalSequence, Subsequence) {
         guard !rawPairs.isEmpty else { return (OptionalSequence(), Subsequence()) }
