@@ -4,9 +4,47 @@ typealias OptionalSequence = [Int?]
 typealias Subsequence = [Int]
 typealias Sequence = [Int]
 
-/// A type that consists of method for working with numbers, sequences and so on.
-/// `MathBox` prepares the basis for the formation of `TypifiedText`.
+/// A type that consists of methods for working with numbers, sequences and so on.
+/// `MathBox` calculates the math basis for the formation of `TypifiedText`.
 final class MathBox {
+    
+    /// The math basis for the formation of `TypifiedText`.
+    ///
+    /// Example:
+    ///
+    ///     let comparedText = "hola"
+    ///     let exemplaryText = "hello"
+    ///
+    /// After calculations:
+    ///
+    ///     basis.exemplarySequence // [0, 1, 2, 3, 4]
+    ///     basis.sequence          // [0, 4, 2, nil]
+    ///     basis.subsequence       // [0, 2]
+    ///     basis.missingElements   // [1, 3, 4]
+    ///
+    struct Basis {
+        
+        /// A sequence generating from `exemplaryText`.
+        let exemplarySequence: Sequence
+        
+        /// A sequence generating from `comparedText` relying on `exemplaryText`.
+        let sequence: OptionalSequence
+        
+        /// The longest increasing subsequence found in `sequence`.
+        let subsequence: Subsequence
+        
+        /// Elements that are missing in `sequence`.
+        let missingElements: Sequence
+        
+        init(exemplarySequence: Sequence, sequence: OptionalSequence, subsequence: Subsequence) {
+            self.exemplarySequence = exemplarySequence
+            self.subsequence = subsequence
+            self.sequence = sequence
+            missingElements = exemplarySequence.filter { !subsequence.contains($0) }
+        }
+        
+    }
+    
     
     // MARK: Pick Best Pair
     
@@ -23,15 +61,18 @@ final class MathBox {
     ///     // ([nil, 1, 2, 4, 3], [1, 2, 3])
     ///
     static func pickBestPair(among rawPairs: [(OptionalSequence, Subsequence)]) -> (OptionalSequence, Subsequence) {
+        
         guard !rawPairs.isEmpty else { return (OptionalSequence(), Subsequence()) }
+        guard rawPairs.count > 1 else { return rawPairs[0] }
+        
         var bestPair = rawPairs[0]
-        guard rawPairs.count > 1 else { return bestPair }
         for rawPair in rawPairs[1...] {
             let rawLis = rawPair.1, bestLis = bestPair.1
             if rawLis.sum < bestLis.sum {
                 bestPair = rawPair
             }
         }
+        
         return bestPair
     }
     
