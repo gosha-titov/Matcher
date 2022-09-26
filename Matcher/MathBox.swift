@@ -79,7 +79,7 @@ final class MathBox {
             sequence = exemplarySequence
         } else {
             let rawSequences = generateRawSequences(for: comparedText, relyingOn: exemplaryText)
-            let rawPairs = makeRawPairs(for: rawSequences)
+            let rawPairs = makeRawPairs(from: rawSequences)
             (sequence, subsequence) = pickBestPair(among: rawPairs)
         }
         
@@ -136,16 +136,16 @@ final class MathBox {
     /// - Note: The result will contain pairs with the max lis length.
     /// - Returns: Pairs of sequence and its subsequence.
     ///
-    static func makeRawPairs(for sequences: [OptionalSequence]) -> [(OptionalSequence, Subsequence)] {
+    static func makeRawPairs(from rawSequences: [OptionalSequence]) -> [(OptionalSequence, Subsequence)] {
         
         var pairs = [(OptionalSequence, Subsequence)]()
         var maxCount = Int()
         
-        sequences.forEach {
-            let sequence = $0.compactMap { $0 }
+        for rawSequence in rawSequences {
+            let sequence = rawSequence.compactMap { $0 }
             let subsequence = findLis(in: sequence)
             if subsequence.count >= maxCount {
-                pairs.append( ($0, subsequence) )
+                pairs.append( (rawSequence, subsequence) )
                 maxCount = subsequence.count
             }
         }

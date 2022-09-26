@@ -107,7 +107,7 @@ class MathBoxTests: XCTestCase {
         
         var rawSequences = [OptionalSequence]()
         var rawPairs: [Pair] {
-            MathBox.makeRawPairs(for: rawSequences).map { Pair($0) }
+            MathBox.makeRawPairs(from: rawSequences).map { Pair($0) }
         }
         
         XCTAssertEqual(rawPairs, [])
