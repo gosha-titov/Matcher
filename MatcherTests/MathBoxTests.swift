@@ -3,6 +3,63 @@ import XCTest
 
 class MathBoxTests: XCTestCase {
     
+    typealias OptionalSequence = MathBox.OptionalSequence
+    typealias Subsequence = MathBox.Subsequence
+    typealias Sequence = MathBox.Sequence
+    
+    // MARK: Calculate Basis
+    
+    func testCalculateBasis() -> Void {
+        
+        typealias Basis = MathBox.Basis
+        
+        var comparedText = String()
+        var exemplaryText = String()
+        var basis: Basis {
+            MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
+        }
+        
+        XCTAssertEqual(basis, Basis([], [], []))
+        
+        comparedText = ""; exemplaryText = "ab"
+        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [], subsequence: []))
+        
+        comparedText = "ab"; exemplaryText = ""
+        XCTAssertEqual(basis, Basis(exemplarySequence: [], sequence: [nil, nil], subsequence: []))
+        
+        comparedText = "ab"; exemplaryText = "ab"
+        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [0, 1], subsequence: [0, 1]))
+        
+        comparedText = "ab"; exemplaryText = "cd"
+        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [nil, nil], subsequence: []))
+        
+        comparedText = "Ab"; exemplaryText = "aB"
+        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [0, 1], subsequence: [0, 1]))
+            
+        comparedText = "bac"; exemplaryText = "abc"
+        XCTAssertEqual(basis, Basis(
+            exemplarySequence: [0, 1, 2],
+            sequence:          [1, 0, 2],
+            subsequence:       [   0, 2]
+        ))
+        
+        comparedText = "3a1cb2"; exemplaryText = "abc123"
+        XCTAssertEqual(basis, Basis(
+            exemplarySequence: [0, 1, 2, 3, 4, 5],
+            sequence:          [5, 0, 3, 2, 1, 4],
+            subsequence:       [   0,       1, 4]
+        ))
+        
+        comparedText = "abc"; exemplaryText = "AaBb"
+        XCTAssertEqual(basis, Basis(
+            exemplarySequence: [0, 1, 2, 3],
+            sequence:          [0, 2, nil ],
+            subsequence:       [0, 2      ]
+        ))
+        
+    }
+    
+    
     // MARK: Pick Best Pair
     
     func testPickBestPair() -> Void {

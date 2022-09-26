@@ -1,12 +1,12 @@
 import ModKit
 
-typealias OptionalSequence = [Int?]
-typealias Subsequence = [Int]
-typealias Sequence = [Int]
-
 /// A type that consists of methods for working with numbers, sequences and so on.
 /// `MathBox` calculates the math basis for the formation of `TypifiedText`.
 final class MathBox {
+    
+    typealias OptionalSequence = [Int?]
+    typealias Subsequence = [Int]
+    typealias Sequence = [Int]
     
     /// The math basis for the formation of `TypifiedText`.
     ///
@@ -18,9 +18,9 @@ final class MathBox {
     /// After calculations:
     ///
     ///     basis.exemplarySequence // [0, 1, 2, 3, 4]
-    ///     basis.sequence          // [0, 4, 2, nil]
-    ///     basis.subsequence       // [0, 2]
-    ///     basis.missingElements   // [1, 3, 4]
+    ///     basis.sequence          // [0, 4, 2, nil ]
+    ///     basis.subsequence       // [0,    2      ]
+    ///     basis.missingElements   // [   1,    3, 4]
     ///
     struct Basis {
         
@@ -36,13 +36,54 @@ final class MathBox {
         /// Elements that are missing in `sequence`.
         let missingElements: Sequence
         
-        init(exemplarySequence: Sequence, sequence: OptionalSequence, subsequence: Subsequence) {
+        init(_ exemplarySequence: Sequence, _ sequence: OptionalSequence, _ subsequence: Subsequence) {
             self.exemplarySequence = exemplarySequence
             self.subsequence = subsequence
             self.sequence = sequence
             missingElements = exemplarySequence.filter { !subsequence.contains($0) }
         }
         
+    }
+    
+    
+    // MARK: Calculate Basis
+    
+    /// Calculates the math basis for the formation of `TypifiedText`.
+    ///
+    ///     let comparedText = "hola"
+    ///     let exemplaryText = "hello"
+    ///
+    ///     let basis = MathBox.calculateBasis(
+    ///         for: comparedText,
+    ///         relyingOn: exemplaryText
+    ///     )
+    ///
+    ///     basis.exemplarySequence // [0, 1, 2, 3, 4]
+    ///     basis.sequence          // [0, 4, 2, nil ]
+    ///     basis.subsequence       // [0,    2      ]
+    ///     basis.missingElements   // [   1,    3, 4]
+    ///
+    /// - Parameters:
+    ///     - comparedText: A text we compare with `exemplaryText` and find the best set of matching chars.
+    ///     - exemplaryText: A text we relying on when calculating `basis` for `comparedText`.
+    ///
+    /// - Returns: The math basis that has properties consisting of indexes of chars in `exemplaryText`.
+    ///
+    static func calculateBasis(for comparedText: String, relyingOn exemplaryText: String) -> Basis {
+        
+        let exemplarySequence: Sequence = Array(0..<exemplaryText.count)
+        let sequence: OptionalSequence, subsequence: Sequence
+        
+        if exemplaryText.lowercased() == comparedText.lowercased() {
+            subsequence = exemplarySequence
+            sequence = exemplarySequence
+        } else {
+            let rawSequences = generateRawSequences(for: comparedText, relyingOn: exemplaryText)
+            let rawPairs = makeRawPairs(for: rawSequences)
+            (sequence, subsequence) = pickBestPair(among: rawPairs)
+        }
+        
+        return Basis(exemplarySequence, sequence, subsequence)
     }
     
     
@@ -66,6 +107,7 @@ final class MathBox {
         guard rawPairs.count > 1 else { return rawPairs[0] }
         
         var bestPair = rawPairs[0]
+        
         for rawPair in rawPairs[1...] {
             let rawLis = rawPair.1, bestLis = bestPair.1
             if rawLis.sum < bestLis.sum {
@@ -96,8 +138,8 @@ final class MathBox {
     ///
     static func makeRawPairs(for sequences: [OptionalSequence]) -> [(OptionalSequence, Subsequence)] {
         
-        var maxCount = Int()
         var pairs = [(OptionalSequence, Subsequence)]()
+        var maxCount = Int()
         
         sequences.forEach {
             let sequence = $0.compactMap { $0 }
@@ -135,10 +177,10 @@ final class MathBox {
     ///
     static func generateRawSequences(for comparedText: String, relyingOn exemplaryText: String) -> [OptionalSequence] {
         
+        let dict = extractCharPositions(from: exemplaryText)
         let comparedText = comparedText.lowercased()
         var rawSequences = [OptionalSequence]()
         var cache = [Character: [Int]]()
-        let dict = extractCharPositions(from: exemplaryText)
         
         func recursion(_ sequence: OptionalSequence, _ index: Int) -> Void {
             guard index < comparedText.count else {
@@ -184,7 +226,9 @@ final class MathBox {
     /// - Returns: A dictionary where each char keeps its own indexes.
     ///
     static func extractCharPositions(from text: String) -> [Character: [Int]] {
+        
         var dict = [Character: [Int]]()
+        
         for (index, char) in text.lowercased().enumerated() {
             if dict.hasKey(char) {
                 dict[char]!.append(index)
@@ -192,6 +236,7 @@ final class MathBox {
                 dict[char] = [index]
             }
         }
+        
         return dict
     }
     
@@ -253,5 +298,23 @@ final class MathBox {
     // MARK: Init
     
     private init() {}
+    
+}
+
+
+extension MathBox.Basis: Equatable {
+    
+    init(exemplarySequence: MathBox.Sequence, sequence: MathBox.OptionalSequence, subsequence: MathBox.Subsequence) {
+        self.init(exemplarySequence, sequence, subsequence)
+    }
+    
+    static func == (lhs: MathBox.Basis, rhs: MathBox.Basis) -> Bool {
+        if lhs.exemplarySequence == rhs.exemplarySequence,
+           lhs.subsequence == rhs.subsequence,
+           lhs.sequence == rhs.sequence {
+            return true
+        }
+        return false
+    }
     
 }
