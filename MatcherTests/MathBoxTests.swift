@@ -3,6 +3,47 @@ import XCTest
 
 class MathBoxTests: XCTestCase {
     
+    // MARK: Pick Best Pair
+    
+    func testPickBestPair() -> Void {
+        
+        var rawPairs = [Pair]()
+        var bestPair: Pair {
+            let rawPairs = rawPairs.map { ($0.sequence, $0.subsequence) }
+            let pair = MathBox.pickBestPair(among: rawPairs)
+            return Pair(pair)
+        }
+        
+        XCTAssertEqual(bestPair, Pair())
+        
+        rawPairs = [
+            Pair(sequence: [0, 1, 2], subsequence: [0, 1, 2])
+        ]
+        XCTAssertEqual(bestPair, rawPairs[0])
+        
+        rawPairs = [
+            Pair(sequence: [1, 4, 2], subsequence: [1, 2]),
+            Pair(sequence: [1, 4, 3], subsequence: [1, 3])
+        ]
+        XCTAssertEqual(bestPair, rawPairs[0])
+        
+        rawPairs = [
+            Pair(sequence: [nil, 1], subsequence: [1]),
+            Pair(sequence: [nil, 2], subsequence: [2])
+        ]
+        XCTAssertEqual(bestPair, rawPairs[0])
+        
+        rawPairs = [
+            Pair(sequence: [nil, 1, 5, 6], subsequence: [1, 5, 6]),
+            Pair(sequence: [nil, 2, 4, 5], subsequence: [2, 4, 5]),
+            Pair(sequence: [nil, 0, 2, 7], subsequence: [0, 2, 7]),
+            Pair(sequence: [nil, 2, 3, 5], subsequence: [2, 3, 5])
+        ]
+        XCTAssertEqual(bestPair, rawPairs[2])
+        
+    }
+    
+    
     // MARK: Make Raw Pairs
     
     func testMakeRawPairs() -> Void {

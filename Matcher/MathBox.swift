@@ -7,6 +7,33 @@ typealias Sequence = [Int]
 
 final class MathBox {
     
+    // MARK: Pick Best Pair
+    
+    /// Picks the best pair among the given pairs.
+    ///
+    ///     let rawPairs = [
+    ///         ([nil, 1, 2, 4, 1], [1, 2, 4]),
+    ///         ([nil, 1, 2, 4, 3], [1, 2, 3])
+    ///     ]
+    ///     let bestPair = pickBestPair(among: rawPairs)
+    ///     // ([nil, 1, 2, 4, 3], [1, 2, 3])
+    ///
+    /// - Note: The picking is made by the smallest lis sum.
+    ///
+    static func pickBestPair(among rawPairs: [(OptionalSequence, Subsequence)]) -> (OptionalSequence, Subsequence) {
+        guard !rawPairs.isEmpty else { return (OptionalSequence(), Subsequence()) }
+        var bestPair = rawPairs[0]
+        guard rawPairs.count > 1 else { return bestPair }
+        for rawPair in rawPairs[1...] {
+            let rawLis = rawPair.1, bestLis = bestPair.1
+            if rawLis.sum < bestLis.sum {
+                bestPair = rawPair
+            }
+        }
+        return bestPair
+    }
+    
+    
     // MARK: Make Raw Pairs
     
     /// Makes raw pairs by finding lises for the given sequences.
@@ -61,7 +88,7 @@ final class MathBox {
     ///         [nil, 1, 4, 3, 2],
     ///         [nil, 3, 4, 3, 2]] */
     ///
-    /// - Returns: Sequences where elemens are indexes of chars in `exemplaryText`.
+    /// - Returns: The sequences where elemens are indexes of chars in `exemplaryText`.
     ///
     static func generateRawSequences(for comparedText: String, relyingOn exemplaryText: String) -> [OptionalSequence] {
         
