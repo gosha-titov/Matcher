@@ -57,6 +57,13 @@ class MathBoxTests: XCTestCase {
             subsequence:       [0, 2      ]
         ))
         
+        comparedText = "aaaa1bbbb"; exemplaryText = "aaaa2bbbb"
+        XCTAssertEqual(basis, Basis(
+            exemplarySequence: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            sequence:          [0, 1, 2, 3, nil, 5, 6, 7, 8],
+            subsequence:       [0, 1, 2, 3,    5, 6, 7, 8]
+        ))
+        
     }
     
     

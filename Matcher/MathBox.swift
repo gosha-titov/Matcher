@@ -10,12 +10,13 @@ final class MathBox {
     
     /// The math basis for the formation of `TypifiedText`.
     ///
-    /// Example:
-    ///
     ///     let comparedText = "hola"
-    ///     let exemplaryText = "hello"
+    ///     let exemplaryText = "Hello"
     ///
-    /// After calculations:
+    ///     let basis = MathBox.calculateBasis(
+    ///         for: comparedText,
+    ///         relyingOn: exemplaryText
+    ///     )
     ///
     ///     basis.exemplarySequence // [0, 1, 2, 3, 4]
     ///     basis.sequence          // [0, 4, 2, nil ]
@@ -51,7 +52,7 @@ final class MathBox {
     /// Calculates the math basis for the formation of `TypifiedText`.
     ///
     ///     let comparedText = "hola"
-    ///     let exemplaryText = "hello"
+    ///     let exemplaryText = "Hello"
     ///
     ///     let basis = MathBox.calculateBasis(
     ///         for: comparedText,
@@ -63,6 +64,7 @@ final class MathBox {
     ///     basis.subsequence       // [0,    2      ]
     ///     basis.missingElements   // [   1,    3, 4]
     ///
+    /// - Note: Letter case does not affect the result.
     /// - Parameters:
     ///     - comparedText: A text we compare with `exemplaryText` and find the best set of matching chars.
     ///     - exemplaryText: A text we relying on when calculating `basis` for `comparedText`.
@@ -71,16 +73,34 @@ final class MathBox {
     ///
     static func calculateBasis(for comparedText: String, relyingOn exemplaryText: String) -> Basis {
         
+        let comparedText = comparedText.lowercased(), exemplaryText = exemplaryText.lowercased()
         let exemplarySequence: Sequence = Array(0..<exemplaryText.count)
         let sequence: OptionalSequence, subsequence: Sequence
         
-        if exemplaryText.lowercased() == comparedText.lowercased() {
+        if exemplaryText == comparedText {
             subsequence = exemplarySequence
             sequence = exemplarySequence
         } else {
-            let rawSequences = generateRawSequences(for: comparedText, relyingOn: exemplaryText)
+            // Find a common beginning(prefix) and ending(suffix) of the texts.
+            let prefix = comparedText.commonPrefix(with: exemplaryText).count
+            let suffix = comparedText.commonSuffix(with: exemplaryText).count
+            
+            // Keep only different parts.
+            let partialExemplaryText = exemplaryText.dropFirst(prefix).dropLast(suffix).toString
+            let partialComparedText  = comparedText .dropFirst(prefix).dropLast(suffix).toString
+            
+            // Perform the work of the algorithm.
+            let rawSequences = generateRawSequences(for: partialComparedText, relyingOn: partialExemplaryText)
             let rawPairs = makeRawPairs(from: rawSequences)
-            (sequence, subsequence) = pickBestPair(among: rawPairs)
+            let (partialSequence, partialSubsequence) = pickBestPair(among: rawPairs)
+            
+            // Restore the missing common parts.
+            let exemplaryPrefix = exemplarySequence.first(prefix)
+            let exemplarySuffix = exemplarySequence.last(suffix)
+            
+            // Put everything together.
+            sequence = exemplaryPrefix + partialSequence.map { $0.hasValue ? $0! + prefix : nil } + exemplarySuffix
+            subsequence = exemplaryPrefix + partialSubsequence.map { $0 + prefix } + exemplarySuffix
         }
         
         return Basis(exemplarySequence, sequence, subsequence)
