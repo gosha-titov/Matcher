@@ -12,18 +12,14 @@ struct TypifiedChar {
         case misspell(_ correctChar: Character)
     }
     
-    enum LetterCase {
-        case correct, wrong
-    }
-    
     
     let value: Character
     var type: CharType?
-    var letterCase: LetterCase?
+    var letterCaseIsCorrect: Bool?
     
     
-    init(_ value: Character, type: CharType? = nil, letterCase: LetterCase? = nil) {
-        self.value = value; self.type = type; self.letterCase = letterCase
+    init(_ value: Character, type: CharType? = nil, letterCaseIsCorrect: Bool? = nil) {
+        self.value = value; self.type = type; self.letterCaseIsCorrect = letterCaseIsCorrect
     }
     
     init() { value = " " }
