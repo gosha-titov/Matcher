@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0C7CFD0B28E3192A000A4E20 /* TypifiedChar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7CFD0A28E3192A000A4E20 /* TypifiedChar.swift */; };
+		0C7CFD0D28E31EE0000A4E20 /* TypifiedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7CFD0C28E31EE0000A4E20 /* TypifiedText.swift */; };
 		0CABEC8E28DE31E900B9D25E /* MathBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CABEC8D28DE31E900B9D25E /* MathBox.swift */; };
 		0CABEC9628DE69D900B9D25E /* MathBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CABEC9528DE69D900B9D25E /* MathBoxTests.swift */; };
 		0CABEC9728DE69D900B9D25E /* Matcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CF21B8E28DE305B007D57EE /* Matcher.framework */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		0C7CFD0A28E3192A000A4E20 /* TypifiedChar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypifiedChar.swift; sourceTree = "<group>"; };
+		0C7CFD0C28E31EE0000A4E20 /* TypifiedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypifiedText.swift; sourceTree = "<group>"; };
 		0CABEC8D28DE31E900B9D25E /* MathBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathBox.swift; sourceTree = "<group>"; };
 		0CABEC9328DE69D900B9D25E /* MatcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MatcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CABEC9528DE69D900B9D25E /* MathBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathBoxTests.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				0C7CFD0A28E3192A000A4E20 /* TypifiedChar.swift */,
+				0C7CFD0C28E31EE0000A4E20 /* TypifiedText.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -258,6 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CABEC8E28DE31E900B9D25E /* MathBox.swift in Sources */,
+				0C7CFD0D28E31EE0000A4E20 /* TypifiedText.swift in Sources */,
 				0C7CFD0B28E3192A000A4E20 /* TypifiedChar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

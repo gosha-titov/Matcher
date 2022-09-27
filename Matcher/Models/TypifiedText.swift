@@ -1,8 +1,10 @@
-//
-//  TypifiedText.swift
-//  Matcher
-//
-//  Created by Gosha on 27.09.2022.
-//
-
-import Foundation
+/// A `Text` where each `Character` has a `Type`.
+///
+///     let typifiedText = [
+///         TypifiedChar("a"),
+///         TypifiedChar("b"),
+///         TypifiedChar("c")
+///         ...
+///     ]
+///
+typealias TypifiedText = [TypifiedChar]
