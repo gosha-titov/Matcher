@@ -216,15 +216,11 @@ final class MathBox {
                     } else {
                         cache[char] = [element]
                     }
-                    var newSequence = sequence
-                    newSequence.append(element)
-                    recursion(newSequence, index + 1)
+                    recursion(sequence + [element], index + 1)
                     cache[char]!.removeLast()
                 }
             } else {
-                var newSequence = sequence
-                newSequence.append(nil)
-                recursion(newSequence, index + 1)
+                recursion(sequence + [nil], index + 1)
             }
         }
         
