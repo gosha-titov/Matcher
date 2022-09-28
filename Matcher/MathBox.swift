@@ -82,12 +82,14 @@ final class MathBox {
             sequence = exemplarySequence
         } else {
             // Find a common beginning(prefix) and ending(suffix) of the texts.
-            let prefix = comparedText.commonPrefix(with: exemplaryText).count
-            let suffix = comparedText.commonSuffix(with: exemplaryText).count
-            
             // Keep only different parts.
-            let partialExemplaryText = exemplaryText.dropFirst(prefix).dropLast(suffix).toString
-            let partialComparedText  = comparedText .dropFirst(prefix).dropLast(suffix).toString
+            let prefix = comparedText.commonPrefix(with: exemplaryText).count
+            var partialExemplaryText = exemplaryText.dropFirst(prefix).toString
+            var partialComparedText  = comparedText .dropFirst(prefix).toString
+            
+            let suffix = partialComparedText.commonSuffix(with: partialExemplaryText).count
+            partialExemplaryText = partialExemplaryText.dropLast(suffix).toString
+            partialComparedText  = partialComparedText .dropLast(suffix).toString
             
             // Perform the work of the algorithm.
             let rawSequences = generateRawSequences(for: partialComparedText, relyingOn: partialExemplaryText)
