@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C74058228E4B8ED0007990E /* CreatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C74058128E4B8ED0007990E /* CreatorTests.swift */; };
 		0C7CFD0B28E3192A000A4E20 /* TypifiedChar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7CFD0A28E3192A000A4E20 /* TypifiedChar.swift */; };
 		0C7CFD0D28E31EE0000A4E20 /* TypifiedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7CFD0C28E31EE0000A4E20 /* TypifiedText.swift */; };
 		0C7CFD0F28E320E9000A4E20 /* Creator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7CFD0E28E320E9000A4E20 /* Creator.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C74058128E4B8ED0007990E /* CreatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatorTests.swift; sourceTree = "<group>"; };
 		0C7CFD0A28E3192A000A4E20 /* TypifiedChar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypifiedChar.swift; sourceTree = "<group>"; };
 		0C7CFD0C28E31EE0000A4E20 /* TypifiedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypifiedText.swift; sourceTree = "<group>"; };
 		0C7CFD0E28E320E9000A4E20 /* Creator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Creator.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 		0CABEC9428DE69D900B9D25E /* MatcherTests */ = {
 			isa = PBXGroup;
 			children = (
+				0C74058128E4B8ED0007990E /* CreatorTests.swift */,
 				0CABEC9528DE69D900B9D25E /* MathBoxTests.swift */,
 			);
 			path = MatcherTests;
@@ -258,6 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C74058228E4B8ED0007990E /* CreatorTests.swift in Sources */,
 				0CABEC9628DE69D900B9D25E /* MathBoxTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

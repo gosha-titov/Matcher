@@ -3,6 +3,77 @@ import ModKit
 /// A creator that forms the `TypifiedText` based on `MathBox`.
 final class Creator {
     
+    static func formBaseTypifiedStr(from comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration) -> TypifiedText {
+        
+        var wrongComparedText: TypifiedText {
+            makeTypifiedText(from: comparedText, withCharTypeOf: .extra, with: configuration)
+        }
+        
+        var missingExemplaryText: TypifiedText {
+            makeTypifiedText(from: exemplaryText, withCharTypeOf: .missing, with: configuration)
+        }
+        
+        guard !exemplaryText.isEmpty else { return wrongComparedText }
+        guard !comparedText .isEmpty else { return missingExemplaryText }
+        
+        guard checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, with: configuration) else {
+            return wrongComparedText
+        }
+        
+        let basis = MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
+        
+        guard checkForExactCompliance(for: basis, with: configuration) else {
+            return wrongComparedText
+        }
+        
+        var typifiedText = comparedText.map { TypifiedChar($0, type: .extra) }
+        
+        
+        // Main loop in which we find the correct chars and insert the missing ones.
+        
+        var missingElements = basis.missingElements
+        var insertingIndex = Int(), offset = Int()
+        var subIndex = Int()
+        var subElement: Int { basis.subsequence[subIndex] }
+        
+        for (index, element) in basis.sequence.enumerated() where element == subElement {
+            
+            func insert(_ indexes: [Int]) -> Void {
+                for index in indexes.reversed() {
+                    let char = exemplaryText[index]
+                    let typifiedChar = TypifiedChar(char, type: .missing)
+                    typifiedText.insert(typifiedChar, at: insertingIndex)
+                }
+            }
+            
+            // Change the type from .extra to .correct
+            var letterCaseIsCorrect = true
+            if let action = configuration.letterCaseAction, action == .doNotChange {
+                letterCaseIsCorrect = exemplaryText[subElement] == comparedText[index]
+            }
+            typifiedText[index + offset].letterCaseIsCorrect = letterCaseIsCorrect
+            typifiedText[index + offset].type = .correct
+            
+            // Insert missing chars.
+            let insertions = missingElements.filter { $0 < subElement }
+            missingElements.removeFirst(insertions.count)
+            insert(insertions)
+            
+            offset += insertions.count
+            insertingIndex = (index + 1) + offset
+            subIndex += 1
+            
+            guard subIndex < basis.subsequence.count else {
+                insert(missingElements)
+                missingElements.removeAll()
+                break
+            }
+        }
+        
+        return typifiedText
+    }
+    
+    
     // MARK: Check for Exact Compliance
     
     /// Checks for exact compliance with the given configuration.
