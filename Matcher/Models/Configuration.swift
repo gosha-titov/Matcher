@@ -60,7 +60,7 @@ struct Configuration {
     var letterCaseAction: LetterCaseAction?
     
     /// The kind of action to be applied to the letter cases of the typified text.
-    enum LetterCaseAction {
+    enum LetterCaseAction: Equatable {
         
         /// Letter cases will not be changed, but there will be a mistake if letter cases do not match.
         case doNotChange
