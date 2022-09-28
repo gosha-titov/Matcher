@@ -1,7 +1,7 @@
 import ModKit
 
-/// A type that consists of methods for working with numbers, sequences and so on.
-/// `MathBox` calculates the math basis for the formation of `TypifiedText`.
+/// A math box that consists of methods for working with numbers, sequences and so on.
+/// This calculates the math basis for the formation of `TypifiedText`.
 final class MathBox {
     
     typealias OptionalSequence = [Int?]
@@ -232,6 +232,32 @@ final class MathBox {
         
         return rawSequences
     }
+    
+    
+    // MARK: Count Common Chars
+    
+    /// Counts common chars between the given texts.
+    ///
+    ///     let text1 = "Abcde"
+    ///     let text2 = "aDftb"
+    ///     let count = countCommonChars(between: text1, and: text2) // 3
+    ///
+    /// - Note: Letter case does not affect the result.
+    ///
+    static func countCommonChars(between text1: String, and text2: String) -> Int {
+        
+        let dict1 = extractCharPositions(from: text1)
+        let dict2 = extractCharPositions(from: text2)
+        var count = Int()
+        
+        for (key1, value1) in dict1 {
+            if let value2 = dict2[key1] {
+                count += min(value1.count, value2.count)
+            }
+        }
+        
+        return count
+    }
 
     
     // MARK: Extract Char Positions
@@ -242,7 +268,7 @@ final class MathBox {
     ///     let dict = extractCharPositions(from: text)
     ///     // ["r": [0], "o": [1, 3], "b": [2], "t": [4]]
     ///
-    /// Letter case does not affect the result.
+    /// - Note: Letter case does not affect the result.
     /// - Returns: A dictionary where each char keeps its own indexes.
     ///
     static func extractCharPositions(from text: String) -> [Character: [Int]] {

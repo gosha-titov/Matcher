@@ -186,6 +186,45 @@ class MathBoxTests: XCTestCase {
         
     }
     
+    
+    // MARK: Count Common Chars
+    
+    func testCountCommonChars() -> Void {
+        
+        var text1 = String()
+        var text2 = String()
+        var count: Int {
+            MathBox.countCommonChars(between: text1, and: text2)
+        }
+        
+        XCTAssertEqual(count, 0)
+        
+        text1 = ""; text2 = "abc"
+        XCTAssertEqual(count, 0)
+        
+        text1 = "abc"; text2 = ""
+        XCTAssertEqual(count, 0)
+        
+        text1 = "abc"; text2 = "abc"
+        XCTAssertEqual(count, 3)
+        
+        text1 = "Abc"; text2 = "aBc"
+        XCTAssertEqual(count, 3)
+        
+        text1 = "abc"; text2 = "cba"
+        XCTAssertEqual(count, 3)
+        
+        text1 = "Ab$c!"; text2 = "Ba$C?"
+        XCTAssertEqual(count, 4)
+        
+        text1 = "#$%"; text2 = "$@#"
+        XCTAssertEqual(count, 2)
+        
+        text1 = "AbAC"; text2 = "acBA"
+        XCTAssertEqual(count, 4)
+        
+    }
+    
 
     // MARK: Extract Char Positions
     
