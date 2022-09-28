@@ -27,7 +27,7 @@ struct Configuration {
         case other(Double)
         
         /// Calculates `Integer` value for this coefficient.
-        func calculateValue(for length: Int) -> Int {
+        func calculate(for length: Int) -> Int {
             let coefficient: Double
             switch self {
             case .other(let value): coefficient = value.clamped(to: 0...1.0)
