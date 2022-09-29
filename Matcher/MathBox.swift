@@ -268,6 +268,7 @@ final class MathBox {
     ///
     /// - Note: Letter case does not affect the result.
     /// - Returns: A dictionary where each char keeps its own indexes.
+    /// - Complexity: O(*n*), where *n* is the length of the text.
     ///
     static func extractCharPositions(from text: String) -> [Character: [Int]] {
         
@@ -293,18 +294,20 @@ final class MathBox {
     ///     let subsequence = findLis(in: sequence) // [0, 1, 3]
     ///
     /// The example sequence has two lises: `[2, 6, 8]` and `[0, 1, 3]`.
-    /// Therefore, this method returns the smallest one.
+    /// This method returns the smallest one, that is `[0, 1, 3]`.
+    /// - Returns: The longest increasing subsequence of the sequence.
+    /// - Complexity: O(*n* log *n*), where *n* is the length of the sequence.
     ///
     static func findLis(in sequence: Sequence) -> Subsequence {
         
         guard sequence.count > 1 else { return sequence }
         
-        // Technically, this array contains the found lises of each length for the current step.
-        // Lises will be ordered by the last element. The length of next lis is one longer.
-        // In this case, the longest lis is the last one.
+        // The array contains the found lises of each length for the current step.
+        // Lises are ordered by the last element. The length of next lis is one longer.
+        // Therefore, the longest lis is the last one.
         //
         // Example: sequence = [0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7]
-        // lises will be [[0], [0, 1], [0, 1, 3], [0, 1, 3, 7], [0, 2, 6, 9, 11]]
+        // At the last step, lises will be [[0], [0, 1], [0, 1, 3], [0, 1, 3, 7], [0, 2, 6, 9, 11]]
         var lises: [Subsequence] = [[sequence.first!]]
         
         for element in sequence[1...] {
@@ -312,7 +315,7 @@ final class MathBox {
             var lowerBound = 0, upperBound = lises.count - 1
             var index: Int { lowerBound }
             
-            // The point of this algorithm is that we do know that `lises` are ordered by the last element.
+            // Lises are ordered by the last element.
             // Shift the boundaries to the first element that is bigger than the current one.
             // Use binary search which is the fastest.
             while lowerBound < upperBound {
