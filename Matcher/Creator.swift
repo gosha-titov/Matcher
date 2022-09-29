@@ -3,38 +3,112 @@ import ModKit
 /// A creator that forms the `TypifiedText` based on `MathBox`.
 final class Creator {
     
-    static func formBaseTypifiedStr(from comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration) -> TypifiedText {
+    // MARK: Form Typified Text
+    
+    /// Forms typified text from the given compared and exempary texts with configuration.
+    ///
+    ///     let comparedText = "hola"
+    ///     let exemplaryText = "Hello"
+    ///
+    ///     let configuration = Configuration()
+    ///     configuration.letterCaseAction = .leadTo(.capitalized)
+    ///
+    ///     let typifiedText = Creator.formTypifiedText(
+    ///         from: comparedText,
+    ///         relyingOn: exemplaryText,
+    ///         with: configuration
+    ///     )
+    ///     /*[TypifiedChar("H", type: .correct),
+    ///        TypifiedChar("e", type: .missing),
+    ///        TypifiedChar("o", type: .extra  ),
+    ///        TypifiedChar("l", type: .correct),
+    ///        TypifiedChar("l", type: .missing),
+    ///        TypifiedChar("o", type: .missing),
+    ///        TypifiedChar("a", type: .extra  )]*/
+    ///
+    /// Only three types of chars are used for forming: `.extra`, `.correct` and `.missing`.
+    /// That is, the typified text needs to be processed by adding `.misspell` and `.swapped` chars.
+    ///
+    /// - Important: The longer the texts, the harder work and, accordingly, the longer this method will be performed.
+    /// So, don't give long texts, otherwise this method can be performed for dozens or even hundreds of seconds.
+    /// Try to use the `requiredQuantityOfMatchingChars` and `acceptableQuantityOfWrongChars` properties of `configuration`,
+    /// it helps to save time by pre-сhecking.
+    ///
+    /// - Note: If you take the correct and missing chars from the typified text in the order in which they stand, then you get the exemplary text.
+    ///
+    static func formTypifiedText(from comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration) -> TypifiedText {
         
-        var wrongComparedText: TypifiedText {
-            makeTypifiedText(from: comparedText, withCharTypeOf: .extra, with: configuration)
-        }
+        var missingExemplaryTypifiedText: TypifiedText { makeTypifiedText(from: exemplaryText, withCharTypeOf: .missing, with: configuration) }
+        var wrongComparedTypifiedText:    TypifiedText { makeTypifiedText(from: comparedText,  withCharTypeOf: .extra,   with: configuration) }
         
-        var missingExemplaryText: TypifiedText {
-            makeTypifiedText(from: exemplaryText, withCharTypeOf: .missing, with: configuration)
-        }
+        guard !exemplaryText.isEmpty else { return wrongComparedTypifiedText }
+        guard !comparedText .isEmpty else { return missingExemplaryTypifiedText }
         
-        guard !exemplaryText.isEmpty else { return wrongComparedText }
-        guard !comparedText .isEmpty else { return missingExemplaryText }
-        
-        guard checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, with: configuration) else {
-            return wrongComparedText
-        }
+        let comparedTextSatisfiesQuickCompliance = checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, with: configuration)
+        guard comparedTextSatisfiesQuickCompliance else { return wrongComparedTypifiedText }
         
         let basis = MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
         
-        guard checkForExactCompliance(for: basis, with: configuration) else {
-            return wrongComparedText
+        let basisSatisfiesExactCompliance = checkForExactCompliance(for: basis, with: configuration)
+        guard basisSatisfiesExactCompliance else { return wrongComparedTypifiedText }
+        
+        var typifiedText = wrongComparedTypifiedText
+        
+        typifiedText = addingCorrectChars(to: typifiedText, relyingOn: exemplaryText, basedOn: basis, with: configuration)
+        typifiedText = addingMissingChars(to: typifiedText, relyingOn: exemplaryText, basedOn: basis)
+        
+        typifiedText = applying(configuration, to: typifiedText)
+        
+        return typifiedText
+    }
+    
+    
+    // MARK: Applying
+    
+    /// Returns a typified text with applied configuration.
+    ///
+    /// Аfter executing this method, the values, the types, the order and the count of typified chars will not be changed.
+    /// Only parameters such as `letterCaseIsCorrect` can be changed.
+    ///
+    static func applying(_ configuration: Configuration, to typifiedText: TypifiedText) -> TypifiedText {
+        
+        var typifiedText = typifiedText
+        
+        if let action = configuration.letterCaseAction {
+            switch action {
+            case .doNotChange: break
+            case .leadTo(let kind):
+                var text = typifiedText.map { $0.value }.joined()
+                let types = typifiedText.map { $0.type }
+                switch kind {
+                case .capitalized: text.capitalize()
+                case .uppercase:   text.uppercase()
+                case .lowercase:   text.lowercase()
+                }
+                typifiedText = zip(text, types).map { TypifiedChar($0.0, type: $0.1) }
+            }
         }
         
-        var typifiedText = comparedText.map { TypifiedChar($0, type: .extra) }
+        return typifiedText
+    }
+    
+    
+    // MARK: Adding Missing Char
+    
+    /// Returns a typified text with added missing chars.
+    ///
+    /// This method inserts missing chars after correct ones.
+    /// The existing typified chars will not change in any way, but missing will be added.
+    /// That is, the count of typified chars changes, which makes the basis no longer usable.
+    ///
+    ///  - Note: The order of typified chars is not changed before this method is called.
+    ///
+    static func addingMissingChars(to typifiedText: TypifiedText, relyingOn exemplaryText: String, basedOn basis: MathBox.Basis) -> TypifiedText {
         
-        
-        // Main loop in which we find the correct chars and insert the missing ones.
-        
+        var typifiedText = typifiedText, subIndex = Int()
+        var subElement: Int { basis.subsequence[subIndex] }
         var missingElements = basis.missingElements
         var insertingIndex = Int(), offset = Int()
-        var subIndex = Int()
-        var subElement: Int { basis.subsequence[subIndex] }
         
         for (index, element) in basis.sequence.enumerated() where element == subElement {
             
@@ -46,15 +120,6 @@ final class Creator {
                 }
             }
             
-            // Change the type from .extra to .correct
-            var letterCaseIsCorrect = true
-            if let action = configuration.letterCaseAction, action == .doNotChange {
-                letterCaseIsCorrect = exemplaryText[subElement] == comparedText[index]
-            }
-            typifiedText[index + offset].letterCaseIsCorrect = letterCaseIsCorrect
-            typifiedText[index + offset].type = .correct
-            
-            // Insert missing chars.
             let insertions = missingElements.filter { $0 < subElement }
             missingElements.removeFirst(insertions.count)
             insert(insertions)
@@ -64,10 +129,40 @@ final class Creator {
             subIndex += 1
             
             guard subIndex < basis.subsequence.count else {
-                insert(missingElements)
-                missingElements.removeAll()
-                break
+                insert(missingElements); break
             }
+        }
+        
+        return typifiedText
+    }
+    
+    
+    // MARK: Adding Correct Char
+    
+    /// Returns a typified text with added correct chars.
+    ///
+    /// This method looks for the elements of `basis.subsequence` in `basis.sequence`, when this happens we get the correct char.
+    /// That is, the typified text must be made up of the compared text and be of `.extra` type.
+    ///
+    /// Аfter executing this method, the values and the count of typified chars and will not be changed, there will be no rearrangements of typified chars.
+    /// Only some their types will be changed from `.extra` to `.correct`.
+    ///
+    /// - Note: The order of typified chars is not changed before this method is called.
+    ///
+    static func addingCorrectChars(to typifiedText: TypifiedText, relyingOn exemplaryText: String, basedOn basis: MathBox.Basis, with configuration: Configuration) -> TypifiedText {
+        
+        var typifiedText = typifiedText, subIndex = Int()
+        var subElement: Int { basis.subsequence[subIndex] }
+        
+        for (index, element) in basis.sequence.enumerated() where element == subElement {
+            var letterCaseIsCorrect = true
+            if let action = configuration.letterCaseAction, action == .doNotChange {
+                letterCaseIsCorrect = exemplaryText[subElement] == typifiedText[index].value
+            }
+            typifiedText[index].letterCaseIsCorrect = letterCaseIsCorrect
+            typifiedText[index].type = .correct
+            subIndex += 1
+            guard subIndex < basis.subsequence.count else { break }
         }
         
         return typifiedText
@@ -82,7 +177,7 @@ final class Creator {
     /// Which means, checking happens only after complex calculations, but the compliance will be accurate.
     ///
     /// - Note: This method checks for the presence or absence of chars and for their order.
-    /// - Returns: `true` if `basis` meets all the conditions; otherwise, `false`.
+    /// - Returns: `true` if `basis` satisfies all the conditions; otherwise, `false`.
     ///
     static func checkForExactCompliance(for basis: MathBox.Basis, with configuration: Configuration) -> Bool {
         
@@ -115,7 +210,7 @@ final class Creator {
     /// But it cannot be that the quick compliance is 50% and the exact compliance is 70%.
     ///
     /// - Note: This method only checks for the presence or absence of chars, but not for their order.
-    /// - Returns: `true` if `comparedText` possibly meets all the conditions; otherwise, `false`.
+    /// - Returns: `true` if `comparedText` possibly satisfies all the conditions; otherwise, `false`.
     ///
     static func checkForQuickCompliance(for comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration) -> Bool {
         
@@ -149,18 +244,17 @@ final class Creator {
     ///         withCharTypeOf: .correct,
     ///         with: configuration
     ///     )
-    ///     /*[TypifiedChar("A", type: .correct, letterCaseIsCorrect: true),
-    ///        TypifiedChar("b", type: .correct, letterCaseIsCorrect: true),
-    ///        TypifiedChar("c", type: .correct, letterCaseIsCorrect: true)]*/
+    ///     /*[TypifiedChar("A", type: .correct),
+    ///        TypifiedChar("b", type: .correct),
+    ///        TypifiedChar("c", type: .correct]*/
     ///
     static func makeTypifiedText(from text: String, withCharTypeOf type: TypifiedChar.CharType, with configuration: Configuration) -> TypifiedText {
         
         var text = text
-        var IsCorrect: Bool? = true
         
         if let action = configuration.letterCaseAction {
             switch action {
-            case .doNotChange: IsCorrect = nil
+            case .doNotChange: break
             case .leadTo(let kind):
                 switch kind {
                 case .capitalized: text.capitalize()
@@ -170,7 +264,7 @@ final class Creator {
             }
         }
         
-        return text.map { TypifiedChar($0, type: type, letterCaseIsCorrect: IsCorrect) }
+        return text.map { TypifiedChar($0, type: type) }
     }
     
     
