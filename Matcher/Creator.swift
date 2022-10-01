@@ -29,14 +29,26 @@ final class Creator {
     /// Only three types of chars are used for forming: `.extra`, `.correct` and `.missing`.
     /// That is, the typified text needs to be processed by adding `.misspell` and `.swapped` chars.
     ///
+    /// **The formation is performed if there is at least one correct char**; otherwise, it returns completely `.extra` or `missing` typified text.
+    ///
+    ///     let comparedText = "hi!"
+    ///     let exemplaryText = "bye."
+    ///     let typifiedText = Creator.formTypifiedText(
+    ///         from: comparedText,
+    ///         relyingOn: exemplaryText
+    ///     )
+    ///     /*[TypifiedChar("h", type: .extra),
+    ///        TypifiedChar("i", type: .extra),
+    ///        TypifiedChar("!", type: .extra)]*/
+    ///
     /// - Important: The longer the texts, the harder work and, accordingly, the longer this method will be performed.
-    /// So, don't give long texts, otherwise this method can be performed for dozens or even hundreds of seconds.
-    /// Try to use the `requiredQuantityOfMatchingChars` and `acceptableQuantityOfWrongChars` properties of `configuration`,
+    /// So, don't give large texts, otherwise this method can be performed for dozens or even hundreds of seconds.
+    /// Try to use the **requiredQuantityOfCorrectChars** and **acceptableQuantityOfWrongChars** properties of `configuration`,
     /// it helps to save time by pre-сhecking.
     ///
     /// - Note: If you take the correct and missing chars from the typified text in the order in which they stand, then you get the exemplary text.
     ///
-    static func formTypifiedText(from comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration) -> TypifiedText {
+    static func formTypifiedText(from comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration = .init()) -> TypifiedText {
         
         var missingExemplaryTypifiedText: TypifiedText { makeTypifiedText(from: exemplaryText, withCharTypeOf: .missing, with: configuration) }
         var wrongComparedTypifiedText:    TypifiedText { makeTypifiedText(from: comparedText,  withCharTypeOf: .extra,   with: configuration) }
@@ -44,13 +56,13 @@ final class Creator {
         guard !exemplaryText.isEmpty else { return wrongComparedTypifiedText }
         guard !comparedText .isEmpty else { return missingExemplaryTypifiedText }
         
-        let comparedTextSatisfiesQuickCompliance = checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, with: configuration)
-        guard comparedTextSatisfiesQuickCompliance else { return wrongComparedTypifiedText }
+        let quickCompliance = checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, to: configuration)
+        guard quickCompliance else { return wrongComparedTypifiedText }
         
         let basis = MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
         
-        let basisSatisfiesExactCompliance = checkForExactCompliance(for: basis, with: configuration)
-        guard basisSatisfiesExactCompliance else { return wrongComparedTypifiedText }
+        let exactCompliance = checkForExactCompliance(for: basis, to: configuration)
+        guard exactCompliance else { return wrongComparedTypifiedText }
         
         var typifiedText = wrongComparedTypifiedText
         
@@ -155,7 +167,7 @@ final class Creator {
         var subElement: Int { basis.subsequence[subIndex] }
         
         for (index, element) in basis.sequence.enumerated() where element == subElement {
-            var letterCaseIsCorrect = true
+            var letterCaseIsCorrect: Bool?
             if let action = configuration.letterCaseAction, action == .doNotChange {
                 letterCaseIsCorrect = exemplaryText[subElement] == typifiedText[index].value
             }
@@ -171,7 +183,7 @@ final class Creator {
     
     // MARK: Check for Exact Compliance
     
-    /// Checks for exact compliance with the given configuration.
+    /// Checks for exact compliance to the given configuration.
     ///
     /// In contrast to the quick compliance, to check for the exact compliance this method needs an argument of Basis type.
     /// Which means, checking happens only after complex calculations, but the compliance will be accurate.
@@ -179,12 +191,12 @@ final class Creator {
     /// - Note: This method checks for the presence or absence of chars and for their order.
     /// - Returns: `true` if `basis` satisfies all the conditions; otherwise, `false`.
     ///
-    static func checkForExactCompliance(for basis: MathBox.Basis, with configuration: Configuration) -> Bool {
+    static func checkForExactCompliance(for basis: MathBox.Basis, to configuration: Configuration) -> Bool {
         
         guard !basis.subsequence.isEmpty else { return false }
         
         let exemplaryLength = basis.exemplarySequence.count
-        if let requiredCount = configuration.requiredQuantityOfMatchingChars?.calculate(for: exemplaryLength) {
+        if let requiredCount = configuration.requiredQuantityOfCorrectChars?.calculate(for: exemplaryLength) {
             let countOfMatchingChars = basis.subsequence.count
             guard requiredCount <= countOfMatchingChars else { return false }
         }
@@ -201,7 +213,7 @@ final class Creator {
     
     // MARK: Check for Quick Compliance
     
-    /// Checks for quick compliance with the given configuration.
+    /// Checks for quick compliance to the given configuration.
     ///
     /// This method finds max possible compliance, which means the compliance will be inaccurate.
     /// It allows you to find out in advance whether you need to do any complex calculations.
@@ -212,13 +224,13 @@ final class Creator {
     /// - Note: This method only checks for the presence or absence of chars, but not for their order.
     /// - Returns: `true` if `comparedText` possibly satisfies all the conditions; otherwise, `false`.
     ///
-    static func checkForQuickCompliance(for comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration) -> Bool {
+    static func checkForQuickCompliance(for comparedText: String, relyingOn exemplaryText: String, to configuration: Configuration) -> Bool {
         
         let countOfCommonChars = MathBox.countCommonChars(between: comparedText, and: exemplaryText)
         
         guard countOfCommonChars > 0 else { return false }
         
-        if let requiredCount = configuration.requiredQuantityOfMatchingChars?.calculate(for: exemplaryText.count) {
+        if let requiredCount = configuration.requiredQuantityOfCorrectChars?.calculate(for: exemplaryText.count) {
             guard requiredCount <= countOfCommonChars else { return false }
         }
         
