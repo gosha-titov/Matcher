@@ -75,36 +75,6 @@ final class Creator {
     }
     
     
-    // MARK: Applying
-    
-    /// Returns a typified text with applied configuration.
-    ///
-    /// Аfter executing this method, the values, the types, the order and the count of typified chars will not be changed.
-    /// Only parameters such as `letterCaseIsCorrect` can be changed.
-    ///
-    static func applying(_ configuration: Configuration, to typifiedText: TypifiedText) -> TypifiedText {
-        
-        var typifiedText = typifiedText
-        
-        if let action = configuration.letterCaseAction {
-            switch action {
-            case .doNotChange: break
-            case .leadTo(let kind):
-                var text = typifiedText.map { $0.value }.joined()
-                let types = typifiedText.map { $0.type }
-                switch kind {
-                case .capitalized: text.capitalize()
-                case .uppercase:   text.uppercase()
-                case .lowercase:   text.lowercase()
-                }
-                typifiedText = zip(text, types).map { TypifiedChar($0.0, type: $0.1) }
-            }
-        }
-        
-        return typifiedText
-    }
-    
-    
     // MARK: Adding Missing Char
     
     /// Returns a typified text with added missing chars.
@@ -262,21 +232,41 @@ final class Creator {
     ///
     static func makeTypifiedText(from text: String, withCharTypeOf type: TypifiedChar.CharType, with configuration: Configuration) -> TypifiedText {
         
-        var text = text
+        var typifiedText = text.map { TypifiedChar($0, type: type) }
+        
+        typifiedText = applying(configuration, to: typifiedText)
+        
+        return typifiedText
+    }
+    
+    
+    // MARK: Applying
+    
+    /// Returns a typified text with applied configuration.
+    ///
+    /// Аfter executing this method, the values, the types, the order and the count of typified chars will not be changed.
+    /// Only parameters such as `letterCaseIsCorrect` can be changed.
+    ///
+    static func applying(_ configuration: Configuration, to typifiedText: TypifiedText) -> TypifiedText {
+        
+        var typifiedText = typifiedText
         
         if let action = configuration.letterCaseAction {
             switch action {
             case .doNotChange: break
             case .leadTo(let kind):
+                var text = typifiedText.map { $0.value }.joined()
+                let types = typifiedText.map { $0.type }
                 switch kind {
                 case .capitalized: text.capitalize()
                 case .uppercase:   text.uppercase()
                 case .lowercase:   text.lowercase()
                 }
+                typifiedText = zip(text, types).map { TypifiedChar($0.0, type: $0.1) }
             }
         }
         
-        return text.map { TypifiedChar($0, type: type) }
+        return typifiedText
     }
     
     
