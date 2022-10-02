@@ -14,61 +14,61 @@ class MathBoxTests: XCTestCase {
         typealias Basis = MathBox.Basis
         
         var comparedText = String()
-        var exemplaryText = String()
+        var accurateText = String()
         var basis: Basis {
-            MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
+            MathBox.calculateBasis(for: comparedText, relyingOn: accurateText)
         }
         
         XCTAssertEqual(basis, Basis([], [], []))
         
-        comparedText = ""; exemplaryText = "ab"
-        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [], subsequence: []))
+        comparedText = ""; accurateText = "ab"
+        XCTAssertEqual(basis, Basis(accurateSequence: [0, 1], sequence: [], subsequence: []))
         
-        comparedText = "ab"; exemplaryText = ""
-        XCTAssertEqual(basis, Basis(exemplarySequence: [], sequence: [nil, nil], subsequence: []))
+        comparedText = "ab"; accurateText = ""
+        XCTAssertEqual(basis, Basis(accurateSequence: [], sequence: [nil, nil], subsequence: []))
         
-        comparedText = "ab"; exemplaryText = "ab"
-        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [0, 1], subsequence: [0, 1]))
+        comparedText = "ab"; accurateText = "ab"
+        XCTAssertEqual(basis, Basis(accurateSequence: [0, 1], sequence: [0, 1], subsequence: [0, 1]))
         
-        comparedText = "ab"; exemplaryText = "cd"
-        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [nil, nil], subsequence: []))
+        comparedText = "ab"; accurateText = "cd"
+        XCTAssertEqual(basis, Basis(accurateSequence: [0, 1], sequence: [nil, nil], subsequence: []))
         
-        comparedText = "Ab"; exemplaryText = "aB"
-        XCTAssertEqual(basis, Basis(exemplarySequence: [0, 1], sequence: [0, 1], subsequence: [0, 1]))
+        comparedText = "Ab"; accurateText = "aB"
+        XCTAssertEqual(basis, Basis(accurateSequence: [0, 1], sequence: [0, 1], subsequence: [0, 1]))
             
-        comparedText = "bac"; exemplaryText = "abc"
+        comparedText = "bac"; accurateText = "abc"
         XCTAssertEqual(basis, Basis(
-            exemplarySequence: [0, 1, 2],
-            sequence:          [1, 0, 2],
-            subsequence:       [   0, 2]
+            accurateSequence: [0, 1, 2],
+            sequence:         [1, 0, 2],
+            subsequence:      [   0, 2]
         ))
         
-        comparedText = "3a1cb2"; exemplaryText = "abc123"
+        comparedText = "3a1cb2"; accurateText = "abc123"
         XCTAssertEqual(basis, Basis(
-            exemplarySequence: [0, 1, 2, 3, 4, 5],
-            sequence:          [5, 0, 3, 2, 1, 4],
-            subsequence:       [   0,       1, 4]
+            accurateSequence: [0, 1, 2, 3, 4, 5],
+            sequence:         [5, 0, 3, 2, 1, 4],
+            subsequence:      [   0,       1, 4]
         ))
         
-        comparedText = "abc"; exemplaryText = "AaBb"
+        comparedText = "abc"; accurateText = "AaBb"
         XCTAssertEqual(basis, Basis(
-            exemplarySequence: [0, 1, 2, 3],
-            sequence:          [0, 2, nil ],
-            subsequence:       [0, 2      ]
+            accurateSequence: [0, 1, 2, 3],
+            sequence:         [0, 2, nil ],
+            subsequence:      [0, 2      ]
         ))
         
-        comparedText = "aaaa1bbbb"; exemplaryText = "aaaa2bbbb"
+        comparedText = "aaaa1bbbb"; accurateText = "aaaa2bbbb"
         XCTAssertEqual(basis, Basis(
-            exemplarySequence: [0, 1, 2, 3,  4,  5, 6, 7, 8],
-            sequence:          [0, 1, 2, 3, nil, 5, 6, 7, 8],
-            subsequence:       [0, 1, 2, 3,      5, 6, 7, 8]
+            accurateSequence: [0, 1, 2, 3,  4,  5, 6, 7, 8],
+            sequence:         [0, 1, 2, 3, nil, 5, 6, 7, 8],
+            subsequence:      [0, 1, 2, 3,      5, 6, 7, 8]
         ))
         
-        comparedText = "abbc"; exemplaryText = "abbbc"
+        comparedText = "abbc"; accurateText = "abbbc"
         XCTAssertEqual(basis, Basis(
-            exemplarySequence: [0, 1, 2, 3, 4],
-            sequence:          [0, 1, 2,    4],
-            subsequence:       [0, 1, 2,    4]
+            accurateSequence: [0, 1, 2, 3, 4],
+            sequence:         [0, 1, 2,    4],
+            subsequence:      [0, 1, 2,    4]
         ))
         
     }
@@ -160,35 +160,35 @@ class MathBoxTests: XCTestCase {
     func testGenerateRawSequences() -> Void {
         
         var comparedText = String()
-        var exemplaryText = String()
+        var accurateText = String()
         var rawSequences: [OptionalSequence] {
-            MathBox.generateRawSequences(for: comparedText, relyingOn: exemplaryText)
+            MathBox.generateRawSequences(for: comparedText, relyingOn: accurateText)
         }
         
         XCTAssertEqual(rawSequences, [[]])
         
-        comparedText = ""; exemplaryText = "abc"
+        comparedText = ""; accurateText = "abc"
         XCTAssertEqual(rawSequences, [[]])
         
-        comparedText = "abc"; exemplaryText = ""
+        comparedText = "abc"; accurateText = ""
         XCTAssertEqual(rawSequences, [ [nil, nil, nil] ])
         
-        comparedText = "abc"; exemplaryText = "def"
+        comparedText = "abc"; accurateText = "def"
         XCTAssertEqual(rawSequences, [ [nil, nil, nil] ])
         
-        comparedText = "abc"; exemplaryText = "abc"
+        comparedText = "abc"; accurateText = "abc"
         XCTAssertEqual(rawSequences, [ [0, 1, 2] ])
         
-        comparedText = "Abc"; exemplaryText = "aBc"
+        comparedText = "Abc"; accurateText = "aBc"
         XCTAssertEqual(rawSequences, [ [0, 1, 2] ])
         
-        comparedText = "aa"; exemplaryText = "aa"
+        comparedText = "aa"; accurateText = "aa"
         XCTAssertEqual(rawSequences, [ [0, 0], [0, 1], [1, 1] ])
         
-        comparedText = "abcd"; exemplaryText = "dcba"
+        comparedText = "abcd"; accurateText = "dcba"
         XCTAssertEqual(rawSequences, [ [3, 2, 1, 0] ])
         
-        comparedText = "abac"; exemplaryText = "caba"
+        comparedText = "abac"; accurateText = "caba"
         XCTAssertEqual(rawSequences, [ [1, 2, 1, 0], [1, 2, 3, 0], [3, 2, 3, 0] ])
         
     }

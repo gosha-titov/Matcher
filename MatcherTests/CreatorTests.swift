@@ -8,36 +8,36 @@ class CreatorTests: XCTestCase {
     func testFormTypifiedText() -> Void {
         
         var comparedText = String()
-        var exemplaryText = String()
+        var accurateText = String()
         var configuration = Configuration()
         var typifiedText: TypifiedText {
-            Creator.formTypifiedText(from: comparedText, relyingOn: exemplaryText, with: configuration)
+            Creator.formTypifiedText(from: comparedText, relyingOn: accurateText, with: configuration)
         }
         
         XCTAssertEqual(typifiedText, [])
         
-        comparedText = "abc"; exemplaryText = ""
+        comparedText = "abc"; accurateText = ""
         XCTAssertEqual(typifiedText, [
             TypifiedChar("a", type: .extra),
             TypifiedChar("b", type: .extra),
             TypifiedChar("c", type: .extra)
         ])
         
-        comparedText = ""; exemplaryText = "abc"
+        comparedText = ""; accurateText = "abc"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("a", type: .missing),
             TypifiedChar("b", type: .missing),
             TypifiedChar("c", type: .missing)
         ])
         
-        comparedText = "def"; exemplaryText = "abc"
+        comparedText = "def"; accurateText = "abc"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("d", type: .extra),
             TypifiedChar("e", type: .extra),
             TypifiedChar("f", type: .extra)
         ])
         
-        comparedText = "cde"; exemplaryText = "abc"
+        comparedText = "cde"; accurateText = "abc"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("a", type: .missing),
             TypifiedChar("b", type: .missing),
@@ -56,7 +56,7 @@ class CreatorTests: XCTestCase {
         ])
         
         configuration.letterCaseAction = .leadTo(.capitalized)
-        comparedText = "abc"; exemplaryText = "ABC"
+        comparedText = "abc"; accurateText = "ABC"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("A", type: .correct),
             TypifiedChar("b", type: .correct),
@@ -64,14 +64,14 @@ class CreatorTests: XCTestCase {
         ])
         
         configuration.letterCaseAction = nil
-        comparedText = "ba"; exemplaryText = "ab"
+        comparedText = "ba"; accurateText = "ab"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("b", type: .extra  ),
             TypifiedChar("a", type: .correct),
             TypifiedChar("b", type: .missing)
         ])
         
-        comparedText = "hola"; exemplaryText = "hello"
+        comparedText = "hola"; accurateText = "hello"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("h", type: .correct),
             TypifiedChar("e", type: .missing),
@@ -85,7 +85,7 @@ class CreatorTests: XCTestCase {
         configuration.letterCaseAction = .leadTo(.uppercase)
         configuration.requiredQuantityOfCorrectChars = .half
         configuration.acceptableQuantityOfWrongChars = .half
-        comparedText = "1a2b"; exemplaryText = "1234"
+        comparedText = "1a2b"; accurateText = "1234"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("1", type: .correct),
             TypifiedChar("A", type: .extra  ),
@@ -95,7 +95,7 @@ class CreatorTests: XCTestCase {
             TypifiedChar("B", type: .extra  )
         ])
         
-        comparedText = "1abc"; exemplaryText = "1234"
+        comparedText = "1abc"; accurateText = "1234"
         XCTAssertEqual(typifiedText, [
             TypifiedChar("1", type: .extra),
             TypifiedChar("A", type: .extra),
@@ -158,121 +158,121 @@ class CreatorTests: XCTestCase {
     func testCheckForCompliance() -> Void {
         
         var comparedText = String()
-        var exemplaryText = String()
+        var accurateText = String()
         var configuration = Configuration()
         var quickCompliance: Bool {
-            Creator.checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, to: configuration)
+            Creator.checkForQuickCompliance(for: comparedText, relyingOn: accurateText, to: configuration)
         }
         var exactCompliance: Bool {
-            let basis = MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
+            let basis = MathBox.calculateBasis(for: comparedText, relyingOn: accurateText)
             return Creator.checkForExactCompliance(for: basis, to: configuration)
         }
         
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
-        comparedText = "abc"; exemplaryText = ""
+        comparedText = "abc"; accurateText = ""
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
-        comparedText = ""; exemplaryText = "abc"
+        comparedText = ""; accurateText = "abc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
-        comparedText = "aaab"; exemplaryText = "bccc"
+        comparedText = "aaab"; accurateText = "bccc"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, true)
         
         configuration.requiredQuantityOfCorrectChars = .low
-        comparedText = "aaab"; exemplaryText = "bccc"
+        comparedText = "aaab"; accurateText = "bccc"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, true)
         
         configuration.requiredQuantityOfCorrectChars = .low
-        comparedText = "aaaaab"; exemplaryText = "bccccc"
+        comparedText = "aaaaab"; accurateText = "bccccc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.requiredQuantityOfCorrectChars = .half
-        comparedText = "aa12"; exemplaryText = "21cc"
+        comparedText = "aa12"; accurateText = "21cc"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, false)
-        comparedText = "aa12"; exemplaryText = "12cc"
+        comparedText = "aa12"; accurateText = "12cc"
         XCTAssertEqual(exactCompliance, true)
         
         configuration.requiredQuantityOfCorrectChars = .half
-        comparedText = "aaabb"; exemplaryText = "bbccc"
+        comparedText = "aaabb"; accurateText = "bbccc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.requiredQuantityOfCorrectChars = .high
-        comparedText = "a123"; exemplaryText = "321c"
+        comparedText = "a123"; accurateText = "321c"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, false)
-        comparedText = "a123"; exemplaryText = "123c"
+        comparedText = "a123"; accurateText = "123c"
         XCTAssertEqual(exactCompliance, true)
         
         configuration.requiredQuantityOfCorrectChars = .high
-        comparedText = "aabbb"; exemplaryText = "bbbcc"
+        comparedText = "aabbb"; accurateText = "bbbcc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.requiredQuantityOfCorrectChars = .all
-        comparedText = "1234"; exemplaryText = "4132"
+        comparedText = "1234"; accurateText = "4132"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, false)
-        comparedText = "1234"; exemplaryText = "1234"
+        comparedText = "1234"; accurateText = "1234"
         XCTAssertEqual(exactCompliance, true)
         
         configuration.requiredQuantityOfCorrectChars = .all
-        comparedText = "abbbb"; exemplaryText = "bbbbc"
+        comparedText = "abbbb"; accurateText = "bbbbc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.requiredQuantityOfCorrectChars = nil
         configuration.acceptableQuantityOfWrongChars = .zero
-        comparedText = "4132"; exemplaryText = "1234"
+        comparedText = "4132"; accurateText = "1234"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, false)
-        comparedText = "1234"; exemplaryText = "1234"
+        comparedText = "1234"; accurateText = "1234"
         XCTAssertEqual(exactCompliance, true)
         
         configuration.acceptableQuantityOfWrongChars = .zero
-        comparedText = "abbbb"; exemplaryText = "bbbbc"
+        comparedText = "abbbb"; accurateText = "bbbbc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.acceptableQuantityOfWrongChars = .low
-        comparedText = "a321"; exemplaryText = "123c"
+        comparedText = "a321"; accurateText = "123c"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, false)
-        comparedText = "a123"; exemplaryText = "123c"
+        comparedText = "a123"; accurateText = "123c"
         XCTAssertEqual(exactCompliance, true)
         
         configuration.acceptableQuantityOfWrongChars = .low
-        comparedText = "aabbb"; exemplaryText = "bbbcc"
+        comparedText = "aabbb"; accurateText = "bbbcc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.acceptableQuantityOfWrongChars = .half
-        comparedText = "aa21"; exemplaryText = "12cc"
+        comparedText = "aa21"; accurateText = "12cc"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, false)
-        comparedText = "aa12"; exemplaryText = "12cc"
+        comparedText = "aa12"; accurateText = "12cc"
         XCTAssertEqual(exactCompliance, true)
         
         configuration.acceptableQuantityOfWrongChars = .half
-        comparedText = "aaaabb"; exemplaryText = "bbcccc"
+        comparedText = "aaaabb"; accurateText = "bbcccc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         
         configuration.acceptableQuantityOfWrongChars = .high
-        comparedText = "aaab"; exemplaryText = "bccc"
+        comparedText = "aaab"; accurateText = "bccc"
         XCTAssertEqual(quickCompliance, true)
         XCTAssertEqual(exactCompliance, true)
         
         configuration.acceptableQuantityOfWrongChars = .high
-        comparedText = "aaaaaab"; exemplaryText = "bcccccc"
+        comparedText = "aaaaaab"; accurateText = "bcccccc"
         XCTAssertEqual(quickCompliance, false)
         XCTAssertEqual(exactCompliance, false)
         

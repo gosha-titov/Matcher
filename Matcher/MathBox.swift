@@ -11,24 +11,24 @@ final class MathBox {
     /// The math basis for the formation of `TypifiedText`.
     ///
     ///     let comparedText = "hola"
-    ///     let exemplaryText = "Hello"
+    ///     let accurateText = "Hello"
     ///
     ///     let basis = MathBox.calculateBasis(
     ///         for: comparedText,
-    ///         relyingOn: exemplaryText
+    ///         relyingOn: accurateText
     ///     )
     ///
-    ///     basis.exemplarySequence // [0, 1, 2, 3, 4]
-    ///     basis.sequence          // [0, 4, 2, nil ]
-    ///     basis.subsequence       // [0,    2      ]
-    ///     basis.missingElements   // [   1,    3, 4]
+    ///     basis.accurateSequence // [0, 1, 2, 3, 4]
+    ///     basis.sequence         // [0, 4, 2, nil ]
+    ///     basis.subsequence      // [0,    2      ]
+    ///     basis.missingElements  // [   1,    3, 4]
     ///
     struct Basis {
         
-        /// A sequence generating from `exemplaryText`.
-        let exemplarySequence: Sequence
+        /// A sequence generating from `accurateText`.
+        let accurateSequence: Sequence
         
-        /// A sequence generating from `comparedText` relying on `exemplaryText`.
+        /// A sequence generating from `comparedText` relying on `accurateText`.
         let sequence: OptionalSequence
         
         /// The longest increasing subsequence found in `sequence`.
@@ -37,11 +37,11 @@ final class MathBox {
         /// Elements that are missing in `sequence`.
         let missingElements: Sequence
         
-        init(_ exemplarySequence: Sequence, _ sequence: OptionalSequence, _ subsequence: Subsequence) {
-            self.exemplarySequence = exemplarySequence
+        init(_ accurateSequence: Sequence, _ sequence: OptionalSequence, _ subsequence: Subsequence) {
+            self.accurateSequence = accurateSequence
             self.subsequence = subsequence
             self.sequence = sequence
-            missingElements = exemplarySequence.filter { !subsequence.contains($0) }
+            missingElements = accurateSequence.filter { !subsequence.contains($0) }
         }
         
     }
@@ -52,59 +52,59 @@ final class MathBox {
     /// Calculates the math basis for the formation of `TypifiedText`.
     ///
     ///     let comparedText = "hola"
-    ///     let exemplaryText = "Hello"
+    ///     let accurateText = "Hello"
     ///
     ///     let basis = MathBox.calculateBasis(
     ///         for: comparedText,
-    ///         relyingOn: exemplaryText
+    ///         relyingOn: accurateText
     ///     )
     ///
-    ///     basis.exemplarySequence // [0, 1, 2, 3, 4]
-    ///     basis.sequence          // [0, 4, 2, nil ]
-    ///     basis.subsequence       // [0,    2      ]
-    ///     basis.missingElements   // [   1,    3, 4]
+    ///     basis.accurateSequence // [0, 1, 2, 3, 4]
+    ///     basis.sequence         // [0, 4, 2, nil ]
+    ///     basis.subsequence      // [0,    2      ]
+    ///     basis.missingElements  // [   1,    3, 4]
     ///
     /// - Note: Letter case does not affect the result.
     /// - Parameters:
-    ///     - comparedText: A text we compare with `exemplaryText` and find the best set of matching chars.
-    ///     - exemplaryText: A text we relying on when calculating `basis` for `comparedText`.
+    ///     - comparedText: A text we compare with `accurateText` and find the best set of matching chars.
+    ///     - accurateText: A text we relying on when calculating `basis` for `comparedText`.
     ///
-    /// - Returns: The math basis that has properties consisting of indexes of chars in `exemplaryText`.
+    /// - Returns: The math basis that has properties consisting of indexes of chars in `accurateText`.
     ///
-    static func calculateBasis(for comparedText: String, relyingOn exemplaryText: String) -> Basis {
+    static func calculateBasis(for comparedText: String, relyingOn accurateText: String) -> Basis {
         
-        let comparedText = comparedText.lowercased(), exemplaryText = exemplaryText.lowercased()
-        let exemplarySequence: Sequence = Array(0..<exemplaryText.count)
+        let comparedText = comparedText.lowercased(), accurateText = accurateText.lowercased()
+        let accurateSequence: Sequence = Array(0..<accurateText.count)
         let sequence: OptionalSequence, subsequence: Sequence
         
-        if exemplaryText == comparedText {
-            subsequence = exemplarySequence
-            sequence = exemplarySequence
+        if accurateText == comparedText {
+            subsequence = accurateSequence
+            sequence = accurateSequence
         } else {
             // Find a common beginning(prefix) and ending(suffix) of the texts.
-            let prefix = comparedText.commonPrefix(with: exemplaryText).count
-            var partialExemplaryText = exemplaryText.dropFirst(prefix).toString
-            var partialComparedText  = comparedText .dropFirst(prefix).toString
+            let prefix = comparedText.commonPrefix(with: accurateText).count
+            var partialAccurateText = accurateText.dropFirst(prefix).toString
+            var partialComparedText = comparedText.dropFirst(prefix).toString
             
-            let suffix = partialComparedText.commonSuffix(with: partialExemplaryText).count
-            partialExemplaryText = partialExemplaryText.dropLast(suffix).toString
-            partialComparedText  = partialComparedText .dropLast(suffix).toString
+            let suffix = partialComparedText.commonSuffix(with: partialAccurateText).count
+            partialAccurateText = partialAccurateText.dropLast(suffix).toString
+            partialComparedText = partialComparedText.dropLast(suffix).toString
             
             // Perform the work of the algorithm.
-            let rawSequences = generateRawSequences(for: partialComparedText, relyingOn: partialExemplaryText)
+            let rawSequences = generateRawSequences(for: partialComparedText, relyingOn: partialAccurateText)
             let rawPairs = makeRawPairs(from: rawSequences)
             let (partialSequence, partialSubsequence) = pickBestPair(among: rawPairs)
             
             // Restore the missing common parts.
-            let exemplaryPrefix = exemplarySequence.first(prefix)
-            let exemplarySuffix = exemplarySequence.last(suffix)
+            let accuratePrefix = accurateSequence.first(prefix)
+            let accurateSuffix = accurateSequence.last(suffix)
             
             // Put everything together.
-            sequence = exemplaryPrefix + partialSequence.map { $0.hasValue ? $0! + prefix : nil } + exemplarySuffix
-            subsequence = exemplaryPrefix + partialSubsequence.map { $0 + prefix } + exemplarySuffix
+            sequence = accuratePrefix + partialSequence.map { $0.hasValue ? $0! + prefix : nil } + accurateSuffix
+            subsequence = accuratePrefix + partialSubsequence.map { $0 + prefix } + accurateSuffix
         }
         
-        return Basis(exemplarySequence, sequence, subsequence)
+        return Basis(accurateSequence, sequence, subsequence)
     }
     
     
@@ -151,8 +151,8 @@ final class MathBox {
     ///     ]
     ///
     ///     let rawPairs = makeRawPairs(for: rawSequences)
-    ///     /* [ ([nil, 1, 2, 4, 1], [1, 2, 4]),
-    ///          ([nil, 1, 2, 4, 3], [1, 2, 3]) ] */
+    ///     /* [([nil, 1, 2, 4, 1], [1, 2, 4]),
+    ///         ([nil, 1, 2, 4, 3], [1, 2, 3])] */
     ///
     /// - Note: The result will contain pairs with the max lis length.
     /// - Returns: Pairs of sequence and its subsequence.
@@ -177,28 +177,28 @@ final class MathBox {
     
     // MARK: Generate Raw Sequences
 
-    /// Generates all possible char placements for `comparedText` relying on `exemplaryText`.
+    /// Generates all possible char placements for `comparedText` relying on `accurateText`.
     ///
-    /// This method searchs for the placements of the same char in `exemplaryText` for each char in `comparedText`.
+    /// This method searchs for the placements of the same char in `accurateText` for each char in `comparedText`.
     ///
     /// The raw sequences are arranged in increasing order.
     /// The indexes of the same chars are arranged in non-decreasing order.
     ///
     ///     let comparedText = "gotob"
-    ///     let exemplaryText = "robot"
+    ///     let accurateText = "robot"
     ///     let rawSequences = generateRawSequences(
     ///         for: comparedText,
-    ///         relyingOn: exemplaryText
+    ///         relyingOn: accurateText
     ///     )
     ///     /* [[nil, 1, 4, 1, 2],
     ///         [nil, 1, 4, 3, 2],
     ///         [nil, 3, 4, 3, 2]] */
     ///
-    /// - Returns: The sequences where elemens are indexes of chars in `exemplaryText`.
+    /// - Returns: The sequences where elemens are indexes of chars in `accurateText`.
     ///
-    static func generateRawSequences(for comparedText: String, relyingOn exemplaryText: String) -> [OptionalSequence] {
+    static func generateRawSequences(for comparedText: String, relyingOn accurateText: String) -> [OptionalSequence] {
         
-        let dict = extractCharPositions(from: exemplaryText)
+        let dict = extractCharPositions(from: accurateText)
         let comparedText = comparedText.lowercased()
         var rawSequences = [OptionalSequence]()
         var cache = [Character: [Int]]()
@@ -350,12 +350,12 @@ final class MathBox {
 
 extension MathBox.Basis: Equatable {
     
-    init(exemplarySequence: MathBox.Sequence, sequence: MathBox.OptionalSequence, subsequence: MathBox.Subsequence) {
-        self.init(exemplarySequence, sequence, subsequence)
+    init(accurateSequence: MathBox.Sequence, sequence: MathBox.OptionalSequence, subsequence: MathBox.Subsequence) {
+        self.init(accurateSequence, sequence, subsequence)
     }
     
     static func == (lhs: MathBox.Basis, rhs: MathBox.Basis) -> Bool {
-        if lhs.exemplarySequence == rhs.exemplarySequence,
+        if lhs.accurateSequence == rhs.accurateSequence,
            lhs.subsequence == rhs.subsequence,
            lhs.sequence == rhs.sequence {
             return true

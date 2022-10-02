@@ -5,17 +5,17 @@ final class Creator {
     
     // MARK: Form Typified Text
     
-    /// Forms typified text from the given compared and exempary texts with configuration.
+    /// Forms typified text from the given compared and accurate texts with configuration.
     ///
     ///     let comparedText = "hola"
-    ///     let exemplaryText = "Hello"
+    ///     let accurateText = "Hello"
     ///
     ///     let configuration = Configuration()
     ///     configuration.letterCaseAction = .leadTo(.capitalized)
     ///
     ///     let typifiedText = Creator.formTypifiedText(
     ///         from: comparedText,
-    ///         relyingOn: exemplaryText,
+    ///         relyingOn: accurateText,
     ///         with: configuration
     ///     )
     ///     /*[TypifiedChar("H", type: .correct),
@@ -32,10 +32,10 @@ final class Creator {
     /// **The formation is performed if there is at least one correct char**; otherwise, it returns completely `.extra` or `missing` typified text.
     ///
     ///     let comparedText = "hi!"
-    ///     let exemplaryText = "bye."
+    ///     let accurateText = "bye"
     ///     let typifiedText = Creator.formTypifiedText(
     ///         from: comparedText,
-    ///         relyingOn: exemplaryText
+    ///         relyingOn: accurateText
     ///     )
     ///     /*[TypifiedChar("h", type: .extra),
     ///        TypifiedChar("i", type: .extra),
@@ -46,28 +46,28 @@ final class Creator {
     /// Try to use the **requiredQuantityOfCorrectChars** and **acceptableQuantityOfWrongChars** properties of `configuration`,
     /// it helps to save time by pre-сhecking.
     ///
-    /// - Note: If you take the correct and missing chars from the typified text in the order in which they stand, then you get the exemplary text.
+    /// - Note: If you take the correct and missing chars from the typified text in the order in which they stand, then you get the accurate text.
     ///
-    static func formTypifiedText(from comparedText: String, relyingOn exemplaryText: String, with configuration: Configuration = .init()) -> TypifiedText {
+    static func formTypifiedText(from comparedText: String, relyingOn accurateText: String, with configuration: Configuration = .init()) -> TypifiedText {
         
-        var missingExemplaryTypifiedText: TypifiedText { makeTypifiedText(from: exemplaryText, withCharTypeOf: .missing, with: configuration) }
-        var wrongComparedTypifiedText:    TypifiedText { makeTypifiedText(from: comparedText,  withCharTypeOf: .extra,   with: configuration) }
+        var missingAccurateTypifiedText: TypifiedText { makeTypifiedText(from: accurateText, withCharTypeOf: .missing, with: configuration) }
+        var wrongComparedTypifiedText:   TypifiedText { makeTypifiedText(from: comparedText, withCharTypeOf: .extra,   with: configuration) }
         
-        guard !exemplaryText.isEmpty else { return wrongComparedTypifiedText }
-        guard !comparedText .isEmpty else { return missingExemplaryTypifiedText }
+        guard !comparedText.isEmpty else { return missingAccurateTypifiedText }
+        guard !accurateText.isEmpty else { return wrongComparedTypifiedText }
         
-        let quickCompliance = checkForQuickCompliance(for: comparedText, relyingOn: exemplaryText, to: configuration)
+        let quickCompliance = checkForQuickCompliance(for: comparedText, relyingOn: accurateText, to: configuration)
         guard quickCompliance else { return wrongComparedTypifiedText }
         
-        let basis = MathBox.calculateBasis(for: comparedText, relyingOn: exemplaryText)
+        let basis = MathBox.calculateBasis(for: comparedText, relyingOn: accurateText)
         
         let exactCompliance = checkForExactCompliance(for: basis, to: configuration)
         guard exactCompliance else { return wrongComparedTypifiedText }
         
         var typifiedText = wrongComparedTypifiedText
         
-        typifiedText = addingCorrectChars(to: typifiedText, relyingOn: exemplaryText, basedOn: basis, with: configuration)
-        typifiedText = addingMissingChars(to: typifiedText, relyingOn: exemplaryText, basedOn: basis)
+        typifiedText = addingCorrectChars(to: typifiedText, relyingOn: accurateText, basedOn: basis, with: configuration)
+        typifiedText = addingMissingChars(to: typifiedText, relyingOn: accurateText, basedOn: basis)
         
         typifiedText = applying(configuration, to: typifiedText)
         
@@ -85,7 +85,7 @@ final class Creator {
     ///
     ///  - Note: The order of typified chars is not changed before this method is called.
     ///
-    static func addingMissingChars(to typifiedText: TypifiedText, relyingOn exemplaryText: String, basedOn basis: MathBox.Basis) -> TypifiedText {
+    static func addingMissingChars(to typifiedText: TypifiedText, relyingOn accurateText: String, basedOn basis: MathBox.Basis) -> TypifiedText {
         
         var typifiedText = typifiedText, subIndex = Int()
         var subElement: Int { basis.subsequence[subIndex] }
@@ -96,7 +96,7 @@ final class Creator {
             
             func insert(_ indexes: [Int]) -> Void {
                 for index in indexes.reversed() {
-                    let char = exemplaryText[index]
+                    let char = accurateText[index]
                     let typifiedChar = TypifiedChar(char, type: .missing)
                     typifiedText.insert(typifiedChar, at: insertingIndex)
                 }
@@ -131,7 +131,7 @@ final class Creator {
     ///
     /// - Note: The order of typified chars is not changed before this method is called.
     ///
-    static func addingCorrectChars(to typifiedText: TypifiedText, relyingOn exemplaryText: String, basedOn basis: MathBox.Basis, with configuration: Configuration) -> TypifiedText {
+    static func addingCorrectChars(to typifiedText: TypifiedText, relyingOn accurateText: String, basedOn basis: MathBox.Basis, with configuration: Configuration) -> TypifiedText {
         
         var typifiedText = typifiedText, subIndex = Int()
         var subElement: Int { basis.subsequence[subIndex] }
@@ -139,7 +139,7 @@ final class Creator {
         for (index, element) in basis.sequence.enumerated() where element == subElement {
             var letterCaseIsCorrect: Bool?
             if let action = configuration.letterCaseAction, action == .compare {
-                letterCaseIsCorrect = exemplaryText[subElement] == typifiedText[index].value
+                letterCaseIsCorrect = accurateText[subElement] == typifiedText[index].value
             }
             typifiedText[index].letterCaseIsCorrect = letterCaseIsCorrect
             typifiedText[index].type = .correct
@@ -165,7 +165,7 @@ final class Creator {
         
         guard !basis.subsequence.isEmpty else { return false }
         
-        let exemplaryLength = basis.exemplarySequence.count
+        let exemplaryLength = basis.accurateSequence.count
         if let requiredCount = configuration.requiredQuantityOfCorrectChars?.calculate(for: exemplaryLength) {
             let countOfMatchingChars = basis.subsequence.count
             guard requiredCount <= countOfMatchingChars else { return false }
@@ -194,13 +194,13 @@ final class Creator {
     /// - Note: This method only checks for the presence or absence of chars, but not for their order.
     /// - Returns: `true` if `comparedText` possibly satisfies all the conditions; otherwise, `false`.
     ///
-    static func checkForQuickCompliance(for comparedText: String, relyingOn exemplaryText: String, to configuration: Configuration) -> Bool {
+    static func checkForQuickCompliance(for comparedText: String, relyingOn accurateText: String, to configuration: Configuration) -> Bool {
         
-        let countOfCommonChars = MathBox.countCommonChars(between: comparedText, and: exemplaryText)
+        let countOfCommonChars = MathBox.countCommonChars(between: comparedText, and: accurateText)
         
         guard countOfCommonChars > 0 else { return false }
         
-        if let requiredCount = configuration.requiredQuantityOfCorrectChars?.calculate(for: exemplaryText.count) {
+        if let requiredCount = configuration.requiredQuantityOfCorrectChars?.calculate(for: accurateText.count) {
             guard requiredCount <= countOfCommonChars else { return false }
         }
         

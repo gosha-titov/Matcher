@@ -20,8 +20,8 @@ struct TypifiedChar {
     
     /// A Boolean value indicating whether the letter case is correct.
     ///
-    ///     let exemplaryChar = Character("A")
-    ///     let comparedChar  = Character("a")
+    ///     let accurateChar = Character("A")
+    ///     let comparedChar = Character("a")
     ///
     ///     // typifiedChar.letterCaseIsCorrect is false
     ///
