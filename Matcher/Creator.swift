@@ -138,7 +138,7 @@ final class Creator {
         
         for (index, element) in basis.sequence.enumerated() where element == subElement {
             var letterCaseIsCorrect: Bool?
-            if let action = configuration.letterCaseAction, action == .doNotChange {
+            if let action = configuration.letterCaseAction, action == .compare {
                 letterCaseIsCorrect = exemplaryText[subElement] == typifiedText[index].value
             }
             typifiedText[index].letterCaseIsCorrect = letterCaseIsCorrect
@@ -253,7 +253,7 @@ final class Creator {
         
         if let action = configuration.letterCaseAction {
             switch action {
-            case .doNotChange: break
+            case .compare: break
             case .leadTo(let kind):
                 var text = typifiedText.map { $0.value }.joined()
                 let types = typifiedText.map { $0.type }

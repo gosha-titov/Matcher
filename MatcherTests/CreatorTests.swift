@@ -46,7 +46,7 @@ class CreatorTests: XCTestCase {
             TypifiedChar("e", type: .extra  )
         ])
         
-        configuration.letterCaseAction = .doNotChange
+        configuration.letterCaseAction = .compare
         XCTAssertEqual(typifiedText, [
             TypifiedChar("a", type: .missing),
             TypifiedChar("b", type: .missing),
@@ -126,7 +126,7 @@ class CreatorTests: XCTestCase {
         
         XCTAssertEqual(applyedTypifiedText, typifiedText)
         
-        configuration.letterCaseAction = .doNotChange
+        configuration.letterCaseAction = .compare
         XCTAssertEqual(applyedTypifiedText, typifiedText)
         
         configuration.letterCaseAction = .leadTo(.capitalized)
@@ -306,7 +306,7 @@ class CreatorTests: XCTestCase {
             TypifiedChar("C", type: type),
         ])
         
-        text = "aBc"; configuration.letterCaseAction = .doNotChange
+        text = "aBc"; configuration.letterCaseAction = .compare
         XCTAssertEqual(typifiedText, [
             TypifiedChar("a", type: type),
             TypifiedChar("B", type: type),
