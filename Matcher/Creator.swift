@@ -29,7 +29,7 @@ final class Creator {
     /// Only three types of chars are used for forming: `.extra`, `.correct` and `.missing`.
     /// That is, the typified text needs to be processed by adding `.misspell` and `.swapped` chars.
     ///
-    /// **The formation is performed if there is at least one correct char**; otherwise, it returns completely `.extra` or `missing` typified text.
+    /// **The formation is performed if there is at least one correct char**; otherwise, it returns completely extra or missing typified text.
     ///
     ///     let comparedText = "hi!"
     ///     let accurateText = "bye"
@@ -56,13 +56,13 @@ final class Creator {
         guard !comparedText.isEmpty else { return missingAccurateTypifiedText }
         guard !accurateText.isEmpty else { return wrongComparedTypifiedText }
         
-        let quickCompliance = checkForQuickCompliance(for: comparedText, relyingOn: accurateText, to: configuration)
-        guard quickCompliance else { return wrongComparedTypifiedText }
+        let quickComplianceIsPassed = passQuickCompliance(for: comparedText, relyingOn: accurateText, to: configuration)
+        guard quickComplianceIsPassed else { return wrongComparedTypifiedText }
         
         let basis = MathBox.calculateBasis(for: comparedText, relyingOn: accurateText)
         
-        let exactCompliance = checkForExactCompliance(for: basis, to: configuration)
-        guard exactCompliance else { return wrongComparedTypifiedText }
+        let exactComplianceIsPassed = passExactCompliance(for: basis, to: configuration)
+        guard exactComplianceIsPassed else { return wrongComparedTypifiedText }
         
         var typifiedText = wrongComparedTypifiedText
         
@@ -151,7 +151,7 @@ final class Creator {
     }
     
     
-    // MARK: Check for Exact Compliance
+    // MARK: Pass Exact Compliance
     
     /// Checks for exact compliance to the given configuration.
     ///
@@ -159,9 +159,9 @@ final class Creator {
     /// Which means, checking happens only after complex calculations, but the compliance will be accurate.
     ///
     /// - Note: This method checks for the presence or absence of chars and for their order.
-    /// - Returns: `true` if `basis` satisfies all the conditions; otherwise, `false`.
+    /// - Returns: `true` if the basis satisfies all the conditions; otherwise, `false`.
     ///
-    static func checkForExactCompliance(for basis: MathBox.Basis, to configuration: Configuration) -> Bool {
+    static func passExactCompliance(for basis: MathBox.Basis, to configuration: Configuration) -> Bool {
         
         guard !basis.subsequence.isEmpty else { return false }
         
@@ -181,7 +181,7 @@ final class Creator {
     }
     
     
-    // MARK: Check for Quick Compliance
+    // MARK: Pass Quick Compliance
     
     /// Checks for quick compliance to the given configuration.
     ///
@@ -192,9 +192,9 @@ final class Creator {
     /// But it cannot be that the quick compliance is 50% and the exact compliance is 70%.
     ///
     /// - Note: This method only checks for the presence or absence of chars, but not for their order.
-    /// - Returns: `true` if `comparedText` possibly satisfies all the conditions; otherwise, `false`.
+    /// - Returns: `true` if the compared text possibly satisfies all the conditions; otherwise, `false`.
     ///
-    static func checkForQuickCompliance(for comparedText: String, relyingOn accurateText: String, to configuration: Configuration) -> Bool {
+    static func passQuickCompliance(for comparedText: String, relyingOn accurateText: String, to configuration: Configuration) -> Bool {
         
         let countOfCommonChars = MathBox.countCommonChars(between: comparedText, and: accurateText)
         

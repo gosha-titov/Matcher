@@ -153,19 +153,19 @@ class CreatorTests: XCTestCase {
     }
     
     
-    // MARK: Check for Compliance
+    // MARK: Pass Compliance
     
-    func testCheckForCompliance() -> Void {
+    func testPassCompliance() -> Void {
         
         var comparedText = String()
         var accurateText = String()
         var configuration = Configuration()
         var quickCompliance: Bool {
-            Creator.checkForQuickCompliance(for: comparedText, relyingOn: accurateText, to: configuration)
+            Creator.passQuickCompliance(for: comparedText, relyingOn: accurateText, to: configuration)
         }
         var exactCompliance: Bool {
             let basis = MathBox.calculateBasis(for: comparedText, relyingOn: accurateText)
-            return Creator.checkForExactCompliance(for: basis, to: configuration)
+            return Creator.passExactCompliance(for: basis, to: configuration)
         }
         
         XCTAssertEqual(quickCompliance, false)
