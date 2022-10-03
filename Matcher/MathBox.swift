@@ -64,12 +64,30 @@ final class MathBox {
     ///     basis.subsequence      // [0,    2      ]
     ///     basis.missingElements  // [   1,    3, 4]
     ///
+    /// **The complexity of the calculation depends on the count of identical chars.**
+    ///
+    /// For instance, all chars are unique, that is, the number of operations equals to `1`.
+    ///
+    ///     let comparedText = "edcba"
+    ///     let accurateText = "abcde"
+    ///
+    /// Another instance, we have 5 "a" and 2 "b" chars, that is, the number of operations equals to `126 * 3 = 378`.
+    ///
+    ///     let comparedText = "bbaaaaa"
+    ///     let accurateText = "aaaaabb"
+    ///
+    /// One more instance, we have 5 "a" and 5 "b" chars, that is, the number of operations equals to `126 * 126 = 15_876`.
+    /// This takes about 0.5 seconds.
+    ///
+    ///     let comparedText = "bbbbbaaaaa"
+    ///     let accurateText = "aaaaabbbbb"
+    ///
     /// - Note: Letter case does not affect the result.
     /// - Parameters:
     ///     - comparedText: A text we compare with `accurateText` and find the best set of matching chars.
     ///     - accurateText: A text we relying on when calculating `basis` for `comparedText`.
     ///
-    /// - Returns: The math basis that has properties consisting of indexes of chars in `accurateText`.
+    /// - Returns: The math basis that has properties consisting of elements that are indexes of chars in `accurateText`.
     ///
     static func calculateBasis(for comparedText: String, relyingOn accurateText: String) -> Basis {
         
